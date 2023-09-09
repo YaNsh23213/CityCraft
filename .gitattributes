@@ -1,0 +1,12 @@
+*.db filter=lfs diff=lfs merge=lfs -text
+*.ipch filter=lfs diff=lfs merge=lfs -text
+*.pch filter=lfs diff=lfs merge=lfs -text
+*.vcxproj filter=lfs diff=lfs merge=lfs -text
+*map_village_day_BuiltData.uasset filter=lfs diff=lfs merge=lfs -text
+*map_village_night_BuiltData.uasset filter=lfs diff=lfs merge=lfs -text
+*LV_Bazaar_Layout.umap filter=lfs diff=lfs merge=lfs -text
+*LV_Bazaar_Layout_BuiltData.uasset filter=lfs diff=lfs merge=lfs -text
+*T_ConcreteDamaged_01a_D.uasset filter=lfs diff=lfs merge=lfs -text
+Map_MedievalTentsProps_Overview_BuiltData.uasset filter=lfs diff=lfs merge=lfs -text
+large_antler_chandelier_fbx.glb filter=lfs diff=lfs merge=lfs -text
+nepali_halbardaxe.glb filter=lfs diff=lfs merge=lfs -text
