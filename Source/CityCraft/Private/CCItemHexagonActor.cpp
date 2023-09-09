@@ -15,6 +15,9 @@ ACCItemHexagonActor::ACCItemHexagonActor()
 void ACCItemHexagonActor::BeginPlay()
 {
     Super::BeginPlay();
+    const auto Material = HexMesh->GetMaterial(0);
+    UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Material, this);
+    HexMesh->SetMaterial(0, DynamicMaterial);
 }
 
 void ACCItemHexagonActor::Tick(float DeltaTime)

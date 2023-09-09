@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CCGameInstance.h"
 #include "CCItemHexagonActor.generated.h"
 
 class UStaticMeshComponent;
@@ -22,6 +23,11 @@ public:
     void UpdatePosition(int32 X, int32 Y);
     FVector2D GetPosition() const { return Position; }
 
+    void SetHexBiome(EHexBiome HexStatus) { HexBiome = HexStatus; }
+    EHexBiome GetHexBiome() { return HexBiome; }
+
+    UStaticMeshComponent* GetHexMesh() { return HexMesh; }
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UStaticMeshComponent* HexMesh;
@@ -29,6 +35,9 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY()
+    EHexBiome HexBiome = EHexBiome::Clear;
+
     UPROPERTY()
     FVector2D Position = {0, 0};
 };
