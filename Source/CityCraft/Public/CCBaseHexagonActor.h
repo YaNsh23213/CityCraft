@@ -55,6 +55,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 150))
     int32 MaxOverlapAmount = 200;
 
+    // Watter settings
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0))
+    bool HaveOcean = true;
+
+    UPROPERTY(
+        EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, EditCondition = "HaveOcean == true"))
+    int32 ContinentAmount = 1;
+
     virtual void BeginPlay() override;
 
 private:
@@ -62,4 +70,6 @@ private:
     TArray<ACCItemHexagonActor*> HexArray;
 
     int32 FindMinMax(bool IsX, bool IsMax);
+
+    ACCItemHexagonActor* GetHexFromIdex(FVector2D Position);
 };

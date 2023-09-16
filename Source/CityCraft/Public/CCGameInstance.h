@@ -12,11 +12,14 @@ enum class EHexBiome : uint8
     Clear UMETA(DisplayName = "Clear"),
     Snow UMETA(DisplayName = "Snow"),
     Desert UMETA(DisplayName = "Desert"),
-    Meadow UMETA(DisplayName = "Meadow")
+    Meadow UMETA(DisplayName = "Meadow"),
+    Plain UMETA(DisplayName = "Plain"),
+    Ocean UMETA(DisplayName = "Ocean"),
+    Coast UMETA(DisplayName = "Coast"),
+    Lake UMETA(DisplayName = "Lake")
 };
 UCLASS()
 class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
 };
