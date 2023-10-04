@@ -9,6 +9,7 @@
 
 class UStaticMeshComponent;
 class UBoxComponent;
+class USceneComponent;
 
 UCLASS()
 class CITYCRAFT_API ACCItemHexagonActor : public AActor
@@ -27,6 +28,12 @@ public:
     EHexBiome GetHexBiome() { return HexBiome; }
 
     UStaticMeshComponent* GetHexMesh() { return HexMesh; }
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
+    UStaticMeshComponent* MeshLocation;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
+    USceneComponent* SceneComponent;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

@@ -2,6 +2,7 @@
 
 #include "CCBaseHexagonActor.h"
 #include "CCItemHexagonActor.h"
+#include "Components/StaticMeshComponent.h"
 
 ACCBaseHexagonActor::ACCBaseHexagonActor()
 {
@@ -17,6 +18,11 @@ void ACCBaseHexagonActor::BeginPlay()
 void ACCBaseHexagonActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void ACCBaseHexagonActor::OnConstruction(const FTransform& Transform)
+{
+    // InitMap(HexDiameterC, MaxYC, MaxXC);
 }
 
 void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
@@ -176,7 +182,8 @@ void ACCBaseHexagonActor::StartGenerate()
                 if (Element->GetPosition().Y >= SnowBorder)
                 {
                     // TO DO Action Mesh
-
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                     continue;
@@ -184,7 +191,8 @@ void ACCBaseHexagonActor::StartGenerate()
 
                 if (Element->GetPosition().Y <= -SnowBorder)
                 {
-
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                     continue;
@@ -196,13 +204,15 @@ void ACCBaseHexagonActor::StartGenerate()
                 if (Element->GetPosition().Y <= DesertBorder && Element->GetPosition().Y >= -DesertBorder)
                 {
                     // TO DO Action Mesh
-
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.DesertMeshArray[int(FMath::RandRange(0, DataMesh.DesertMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::Yellow);
                     Element->SetHexBiome(EHexBiome::Desert);
                     continue;
                 }
             }
-            // Generate MeadowLocation
+            // Generate MeadowLocation 
+            Element->MeshLocation->SetStaticMesh(DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
             TempMaterial->SetVectorParameterValue("Type", FColor::Green);
             Element->SetHexBiome(EHexBiome::Meadow);
         }
@@ -240,11 +250,15 @@ void ACCBaseHexagonActor::StartGenerate()
                 UE_LOG(LogTemp, Display, TEXT("RandNumber %i ChangeToOverlap %i"), RandNumber, ChangeToOverlap);
                 if (RandNumber < ChangeToOverlap)
                 {
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                 }
                 else
                 {
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                     Element->SetHexBiome(EHexBiome::Meadow);
                 }
@@ -268,11 +282,15 @@ void ACCBaseHexagonActor::StartGenerate()
                 UE_LOG(LogTemp, Display, TEXT("RandNumber %i ChangeToOverlap %i"), RandNumber, ChangeToOverlap);
                 if (RandNumber < ChangeToOverlap)
                 {
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                 }
                 else
                 {
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                     Element->SetHexBiome(EHexBiome::Meadow);
                 }
@@ -319,6 +337,8 @@ void ACCBaseHexagonActor::StartGenerate()
                 int32 RandNumber = FMath::RandRange(0, 100);
                 if (RandNumber < ChangeToOverlap)
                 {
+                    Element->MeshLocation->SetStaticMesh(
+                        DataMesh.DesertMeshArray[int(FMath::RandRange(0, DataMesh.DesertMeshArray.Num() - 1))]);
                     TempMaterial->SetVectorParameterValue("Type", FColor::Yellow);
                     Element->SetHexBiome(EHexBiome::Desert);
                 }
@@ -326,6 +346,8 @@ void ACCBaseHexagonActor::StartGenerate()
                 {
                     if (Element->GetHexBiome() == EHexBiome::Desert)
                     {
+                        Element->MeshLocation->SetStaticMesh(
+                            DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
                         TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                         Element->SetHexBiome(EHexBiome::Meadow);
                     }
@@ -335,309 +357,62 @@ void ACCBaseHexagonActor::StartGenerate()
     }
 
     // Watter
-    if (HaveOcean && ContinentAmount > 0)
+    if (HaveOcean)
     {
-        while (MaxBoundX * 2 / ContinentAmount < 25)
-        {
-            ContinentAmount--;
-            UE_LOG(LogTemp, Warning, TEXT("MaxBoundX %i ContinentAmount %i"), MaxBoundX * 2, ContinentAmount)
-        }
         int32 StartPoint = 0;
         int32 OffsetStartPoint = 0;
         int32 OceanMedianaAmount = 0;
         FVector2D CurrentIndex = {0, 0};
         ACCItemHexagonActor *CurrentItem, *NarcoalCurrentItem = nullptr;
         UMaterialInstanceDynamic* TempMaterial = nullptr;
-        if (ContinentAmount > 1)
+        for (int32 n = 0; n < MaxBoundY + 2; n++)
         {
-            OceanMedianaAmount = ContinentAmount - 1;
-            ////////////////////////
-
-            for (int32 o = 0; o < OceanMedianaAmount; o++)
+            CurrentItem = GetHexFromIdex(CurrentIndex);
+            if (CurrentItem)
             {
-                if (OceanMedianaAmount % 2 != 0)
+                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
+                    *CurrentItem->GetPosition().ToString())
+                TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
+                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
+                CurrentItem->SetHexBiome(EHexBiome::Ocean);
+            }
+            if (n % 2 != 0)
+            {
+                // CurrentIndex.X += 1;
+                CurrentIndex.Y += 1;
+            }
+            else
+            {
+                if (n != 0)
                 {
-                    OffsetStartPoint = (MaxBoundX * 2 / OceanMedianaAmount) / 2;
-                    // Cheak first index
-                    if (o == 0)
-                    {
-                        CurrentIndex = {0, 0};
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            CurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (CurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *CurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                CurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                // CurrentIndex.X += 1;
-                                CurrentIndex.Y += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    CurrentIndex.X -= 1;
-                                    CurrentIndex.Y += 1;
-                                }
-                            }
-                        }
-                        CurrentIndex = {0, 0};
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (NarcoalCurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *NarcoalCurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                CurrentIndex.Y -= 1;
-                                CurrentIndex.X += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    // CurrentIndex.X += 1;
-                                    CurrentIndex.Y -= 1;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        CurrentIndex = {0, 0};
-                        CurrentIndex.X += OffsetStartPoint+(OffsetStartPoint*o);
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            CurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (CurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *CurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                CurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                // CurrentIndex.X += 1;
-                                CurrentIndex.Y += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    CurrentIndex.X -= 1;
-                                    CurrentIndex.Y += 1;
-                                }
-                            }
-                        }
-                        CurrentIndex = {0, 0};
-                        CurrentIndex.X += OffsetStartPoint + (OffsetStartPoint * o);
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (NarcoalCurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *NarcoalCurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                CurrentIndex.Y -= 1;
-                                CurrentIndex.X += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    // CurrentIndex.X += 1;
-                                    CurrentIndex.Y -= 1;
-                                }
-                            }
-                        }
-                        CurrentIndex = {0, 0};
-                        CurrentIndex.X -= OffsetStartPoint + (OffsetStartPoint * o);
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            CurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (CurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *CurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                CurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                // CurrentIndex.X += 1;
-                                CurrentIndex.Y += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    CurrentIndex.X -= 1;
-                                    CurrentIndex.Y += 1;
-                                }
-                            }
-                        }
-                        CurrentIndex = {0, 0};
-                        CurrentIndex.X -= OffsetStartPoint + (OffsetStartPoint * o);
-                        for (int32 n = 0; n < MaxBoundY + 2; n++)
-                        {
-                            NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
-                            if (NarcoalCurrentItem)
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                    *NarcoalCurrentItem->GetPosition().ToString())
-                                TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                                NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
-                            }
-                            if (n % 2 != 0)
-                            {
-                                CurrentIndex.Y -= 1;
-                                CurrentIndex.X += 1;
-                            }
-                            else
-                            {
-                                if (n != 0)
-                                {
-                                    // CurrentIndex.X += 1;
-                                    CurrentIndex.Y -= 1;
-                                }
-                            }
-                        }
-                    }
+                    CurrentIndex.X -= 1;
+                    CurrentIndex.Y += 1;
                 }
-                else
+            }
+        }
+        CurrentIndex = {0, 0};
+        for (int32 n = 0; n < MaxBoundY + 2; n++)
+        {
+            NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
+            if (NarcoalCurrentItem)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
+                    *NarcoalCurrentItem->GetPosition().ToString())
+                TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
+                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
+                NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
+            }
+            if (n % 2 != 0)
+            {
+                CurrentIndex.Y -= 1;
+                CurrentIndex.X += 1;
+            }
+            else
+            {
+                if (n != 0)
                 {
-                    OffsetStartPoint = (MaxBoundX * 2 / OceanMedianaAmount);
-                    CurrentIndex = {0, 0};
-                    CurrentIndex.X += OffsetStartPoint;
-                    for (int32 n = 0; n < MaxBoundY + 2; n++)
-                    {
-                        CurrentItem = GetHexFromIdex(CurrentIndex);
-                        if (CurrentItem)
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                *CurrentItem->GetPosition().ToString())
-                            TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                            TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                            CurrentItem->SetHexBiome(EHexBiome::Ocean);
-                        }
-                        if (n % 2 != 0)
-                        {
-                            // CurrentIndex.X += 1;
-                            CurrentIndex.Y += 1;
-                        }
-                        else
-                        {
-                            if (n != 0)
-                            {
-                                CurrentIndex.X -= 1;
-                                CurrentIndex.Y += 1;
-                            }
-                        }
-                    }
-                    CurrentIndex = {0, 0};
-                    CurrentIndex.X += OffsetStartPoint;
-                    for (int32 n = 0; n < MaxBoundY + 2; n++)
-                    {
-                        NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
-                        if (NarcoalCurrentItem)
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                *NarcoalCurrentItem->GetPosition().ToString())
-                            TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                            TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                            NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
-                        }
-                        if (n % 2 != 0)
-                        {
-                            CurrentIndex.Y -= 1;
-                            CurrentIndex.X += 1;
-                        }
-                        else
-                        {
-                            if (n != 0)
-                            {
-                                // CurrentIndex.X += 1;
-                                CurrentIndex.Y -= 1;
-                            }
-                        }
-                    }
-                    OffsetStartPoint = (MaxBoundX * 2 / OceanMedianaAmount) / 2;
-                    CurrentIndex = {0, 0};
-                    CurrentIndex.X -= OffsetStartPoint;
-                    for (int32 n = 0; n < MaxBoundY + 2; n++)
-                    {
-                        CurrentItem = GetHexFromIdex(CurrentIndex);
-                        if (CurrentItem)
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                *CurrentItem->GetPosition().ToString())
-                            TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                            TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                            CurrentItem->SetHexBiome(EHexBiome::Ocean);
-                        }
-                        if (n % 2 != 0)
-                        {
-                            // CurrentIndex.X += 1;
-                            CurrentIndex.Y += 1;
-                        }
-                        else
-                        {
-                            if (n != 0)
-                            {
-                                CurrentIndex.X -= 1;
-                                CurrentIndex.Y += 1;
-                            }
-                        }
-                    }
-                    CurrentIndex = {0, 0};
-                    CurrentIndex.X -= OffsetStartPoint;
-                    for (int32 n = 0; n < MaxBoundY + 2; n++)
-                    {
-                        NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
-                        if (NarcoalCurrentItem)
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                                *NarcoalCurrentItem->GetPosition().ToString())
-                            TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                            TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
-                            NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
-                        }
-                        if (n % 2 != 0)
-                        {
-                            CurrentIndex.Y -= 1;
-                            CurrentIndex.X += 1;
-                        }
-                        else
-                        {
-                            if (n != 0)
-                            {
-                                // CurrentIndex.X += 1;
-                                CurrentIndex.Y -= 1;
-                            }
-                        }
-                    }
+                    // CurrentIndex.X += 1;
+                    CurrentIndex.Y -= 1;
                 }
             }
         }

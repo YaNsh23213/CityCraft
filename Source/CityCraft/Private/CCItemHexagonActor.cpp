@@ -8,8 +8,12 @@ ACCItemHexagonActor::ACCItemHexagonActor()
 {
 
     PrimaryActorTick.bCanEverTick = true;
+    SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    SetRootComponent(SceneComponent);
     HexMesh = CreateDefaultSubobject<UStaticMeshComponent>("HexMesh");
     HexMesh->SetupAttachment(RootComponent);
+    MeshLocation = CreateDefaultSubobject<UStaticMeshComponent>("MeshMap");
+    MeshLocation->SetupAttachment(RootComponent);
 }
 
 void ACCItemHexagonActor::BeginPlay()

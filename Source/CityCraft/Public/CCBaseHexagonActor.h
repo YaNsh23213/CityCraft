@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CCGameInstance.h"
 #include "CCBaseHexagonActor.generated.h"
 
 class ACCItemHexagonActor;
@@ -17,7 +18,9 @@ public:
     ACCBaseHexagonActor();
 
     virtual void Tick(float DeltaTime) override;
+    virtual void OnConstruction(const FTransform& Transform) override;
 
+    UFUNCTION(BlueprintCallable)
     void InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX);
     void StartGenerate();
 
@@ -61,9 +64,12 @@ protected:
 
     UPROPERTY(
         EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, EditCondition = "HaveOcean == true"))
-    int32 ContinentAmount = 1;
+    bool ContinentTwo = false;
 
     virtual void BeginPlay() override;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FMeshData DataMesh;
 
 private:
     UPROPERTY()

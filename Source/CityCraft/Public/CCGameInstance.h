@@ -18,8 +18,37 @@ enum class EHexBiome : uint8
     Coast UMETA(DisplayName = "Coast"),
     Lake UMETA(DisplayName = "Lake")
 };
-UCLASS()
-class CITYCRAFT_API UCCGameInstance : public UGameInstance
+USTRUCT(BlueprintType)
+struct FMeshData
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> DesertMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> DesertHillMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> MeadowMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> MeadowHillMeshArray;
+
+     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> MeadowWoodMeshArray;
+
+      UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> MeadowHillWoodMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> SnowMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> SnowHillMeshArray;
+};
+UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {
     GENERATED_BODY()
 };
