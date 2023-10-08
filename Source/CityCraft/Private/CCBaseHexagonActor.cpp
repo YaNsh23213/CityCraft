@@ -211,7 +211,7 @@ void ACCBaseHexagonActor::StartGenerate()
                     continue;
                 }
             }
-            // Generate MeadowLocation 
+            // Generate MeadowLocation
             Element->MeshLocation->SetStaticMesh(DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
             TempMaterial->SetVectorParameterValue("Type", FColor::Green);
             Element->SetHexBiome(EHexBiome::Meadow);
@@ -319,7 +319,6 @@ void ACCBaseHexagonActor::StartGenerate()
                 Min = -DesertBorder - PersentOverlapDesertBiome;
                 Max = DesertBorder + PersentOverlapDesertBiome;
                 Mid = (Max + Min) / 2;
-                UE_LOG(LogTemp, Display, TEXT("Mid %i"), Mid);
                 MaxCont = PersentOverlapDesertBiome * 2 + 1;
                 for (int32 i = 0; i < MaxCont; i++)
                 {
@@ -417,6 +416,231 @@ void ACCBaseHexagonActor::StartGenerate()
             }
         }
     }
+
+    // HillGenerate
+    TArray<ACCItemHexagonActor*> DesertArr;
+    TArray<ACCItemHexagonActor*> SnowArr;
+    TArray<ACCItemHexagonActor*> MeadowArr;
+    for (auto Element : HexArray)
+    {
+        switch (Element->GetHexBiome())
+        {
+            case EHexBiome::Snow: SnowArr.Add(Element); break;
+            case EHexBiome::Meadow: MeadowArr.Add(Element); break;
+            case EHexBiome::Desert: DesertArr.Add(Element); break;
+        }
+    }
+    int32 i = 0;
+    // DesertHill
+    float DesrtHillFr = DesertArr.Num() * DesertHilFrequency;
+    while (i < DesrtHillFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, DesertArr.Num() - 1);
+        if (DesertArr.IsValidIndex(TempIndex))
+        {
+            DesertArr[TempIndex]->SetHexBiome(EHexBiome::DesertHill);
+            DesertArr[TempIndex]->MeshLocation->SetStaticMesh(
+                DataMesh.DesertHillMeshArray[int(FMath::RandRange(0, DataMesh.DesertHillMeshArray.Num() - 1))]);
+            DesertArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // SnowHill
+    i = 0;
+    float SnowArrHillFr = SnowArr.Num() * SnowHilFrequency;
+    while (i < SnowArrHillFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, SnowArr.Num());
+        if (SnowArr.IsValidIndex(TempIndex))
+        {
+            SnowArr[TempIndex]->SetHexBiome(EHexBiome::SnowHill);
+            SnowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                DataMesh.SnowHillMeshArray[int(FMath::RandRange(0, DataMesh.SnowHillMeshArray.Num() - 1))]);
+            SnowArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // MeadowHill
+    i = 0;
+    float MeadowArrlFr = MeadowArr.Num() * MeadowHilFrequency;
+    while (i < MeadowArrlFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, MeadowArr.Num() - 1);
+        if (MeadowArr.IsValidIndex(TempIndex))
+        {
+            MeadowArr[TempIndex]->SetHexBiome(EHexBiome::MeadowHill);
+            MeadowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                DataMesh.MeadowHillMeshArray[int(FMath::RandRange(0, DataMesh.MeadowHillMeshArray.Num() - 1))]);
+            MeadowArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // WoodGenerate
+    TArray<ACCItemHexagonActor*> WoodDesertArr;
+    TArray<ACCItemHexagonActor*> WoodSnowArr;
+    TArray<ACCItemHexagonActor*> WoodMeadowArr;
+    for (auto ElementWood : HexArray)
+    {
+        switch (ElementWood->GetHexBiome())
+        {
+            case EHexBiome::Snow: WoodSnowArr.Add(ElementWood); break;
+            case EHexBiome::Meadow: WoodMeadowArr.Add(ElementWood); break;
+            case EHexBiome::Desert: WoodDesertArr.Add(ElementWood); break;
+            case EHexBiome::SnowHill: WoodSnowArr.Add(ElementWood); break;
+            case EHexBiome::MeadowHill: WoodMeadowArr.Add(ElementWood); break;
+            case EHexBiome::DesertHill: WoodDesertArr.Add(ElementWood); break;
+        }
+    }
+    // DesertWood
+    i = 0;
+    float WoodDesrtHillFr = WoodDesertArr.Num() * DesertWoodFrequency;
+    while (i < WoodDesrtHillFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, WoodDesertArr.Num() - 1);
+        if (WoodDesertArr.IsValidIndex(TempIndex))
+        {
+            if (WoodDesertArr[TempIndex]->GetHexBiome() == EHexBiome::Desert)
+            {
+                WoodDesertArr[TempIndex]->SetHexBiome(EHexBiome::DesertWood);
+                WoodDesertArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.DesertWoodMeshArray[int(FMath::RandRange(0, DataMesh.DesertWoodMeshArray.Num() - 1))]);
+            }
+            else
+            {
+                WoodDesertArr[TempIndex]->SetHexBiome(EHexBiome::DesertHillWood);
+                WoodDesertArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.DesertHillWoodMeshArray[int(FMath::RandRange(0, DataMesh.DesertHillWoodMeshArray.Num() - 1))]);
+            }
+            WoodDesertArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // SnowWood
+    i = 0;
+    float WoodSnowArrHillFr = WoodSnowArr.Num() * SnowWoodFrequency;
+    UE_LOG(LogTemp, Warning, TEXT("Num ARRAY SNOW %i"), WoodSnowArr.Num());
+    while (i < WoodSnowArrHillFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, WoodSnowArr.Num() - 1);
+        UE_LOG(LogTemp, Warning, TEXT("index %i"), TempIndex);
+        if (WoodSnowArr.IsValidIndex(TempIndex))
+        {
+            if (WoodSnowArr[TempIndex]->GetHexBiome() == EHexBiome::Snow)
+            {
+                WoodSnowArr[TempIndex]->SetHexBiome(EHexBiome::SnowWood);
+                WoodSnowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.SnowWoodMeshArray[int(FMath::RandRange(0, DataMesh.SnowWoodMeshArray.Num() - 1))]);
+            }
+            else
+            {
+                WoodSnowArr[TempIndex]->SetHexBiome(EHexBiome::SnowHillWood);
+                WoodSnowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.SnowHillWoodMeshArray[int(FMath::RandRange(0, DataMesh.SnowHillWoodMeshArray.Num() - 1))]);
+            }
+            WoodSnowArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // MeadowHill
+    i = 0;
+    float WoodMeadowArrlFr = WoodMeadowArr.Num() * MeadowWoodFrequency;
+    while (i < WoodMeadowArrlFr)
+    {
+        int32 TempIndex = FMath::RandRange(0, WoodMeadowArr.Num() - 1);
+        if (WoodMeadowArr.IsValidIndex(TempIndex))
+        {
+            if (WoodMeadowArr[TempIndex]->GetHexBiome() == EHexBiome::Meadow)
+            {
+                WoodMeadowArr[TempIndex]->SetHexBiome(EHexBiome::DesertWood);
+                WoodMeadowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.MeadowWoodMeshArray[int(FMath::RandRange(0, DataMesh.MeadowWoodMeshArray.Num() - 1))]);
+            }
+            else
+            {
+                WoodMeadowArr[TempIndex]->SetHexBiome(EHexBiome::MeadowHillWood);
+                WoodMeadowArr[TempIndex]->MeshLocation->SetStaticMesh(
+                    DataMesh.MeadowHillWoodMeshArray[int(FMath::RandRange(0, DataMesh.MeadowHillWoodMeshArray.Num() - 1))]);
+            }
+            WoodMeadowArr.RemoveAt(TempIndex);
+        }
+        i++;
+    }
+    // LakeGenerate
+    if (AmountLake > 0)
+    {
+        TArray<int32> LakeIndex;
+        bool ValidIndex = false;
+        for (int32 n = 0; n < AmountLake; n++)
+        {
+            while (!ValidIndex)
+            {
+                int32 TempIndexLake = FMath::RandRange(0, HexArray.Num() - 1);
+                for (int32 Temp : LakeIndex)
+                {
+                    if (Temp == TempIndexLake)
+                    {
+                        continue;
+                    }
+                }
+                LakeIndex.Add(TempIndexLake);
+                ValidIndex = true;
+                HexArray[TempIndexLake]->MeshLocation->SetStaticMesh(
+                    DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
+                HexArray[TempIndexLake]->SetHexBiome(EHexBiome::Lake);
+            }
+            ValidIndex = false;
+        }
+        for (int32 TempIndex : LakeIndex)
+        {
+            auto FirstRadiusArray = GetFirstRadiusHex(HexArray[TempIndex]);
+            auto SecondRadiusArray = GetSecondRadiusHex(HexArray[TempIndex]);
+            auto ThirdRadiusArray = GetThirdRadiusHex(HexArray[TempIndex]);
+            for (auto RadiusElement : FirstRadiusArray)
+            {
+                if (FMath::FRandRange(0.0f, 1.0f) < StartedChanceUpLake)
+                {
+                    RadiusElement->MeshLocation->SetStaticMesh(
+                        DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
+                    RadiusElement->SetHexBiome(EHexBiome::Lake);
+                }
+            }
+            for (auto RadiusElement : SecondRadiusArray)
+            {
+                auto TempRadius = GetFirstRadiusHex(RadiusElement);
+                for (auto TempRadiusElement : TempRadius)
+                {
+                    if (TempRadiusElement->GetHexBiome() == EHexBiome::Lake)
+                    {
+                        if (FMath::FRandRange(0.0f, 1.0f) < FMath::Clamp(StartedChanceUpLake - StepChanceDownLake, 0.0f, 10.0f))
+                        {
+                            RadiusElement->MeshLocation->SetStaticMesh(
+                                DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
+                            RadiusElement->SetHexBiome(EHexBiome::Lake);
+                            break;
+                        }
+                    }
+                }
+            }
+            for (auto RadiusElement : ThirdRadiusArray)
+            {
+                auto TempRadius = GetFirstRadiusHex(RadiusElement);
+                for (auto TempRadiusElement : TempRadius)
+                {
+                    if (TempRadiusElement->GetHexBiome() == EHexBiome::Lake)
+                    {
+                        if (FMath::FRandRange(0.0f, 1.0f) <
+                            FMath::Clamp(StartedChanceUpLake - StepChanceDownLake - StepChanceDownLake, 0.0f, 10.0f))
+                        {
+                            RadiusElement->MeshLocation->SetStaticMesh(
+                                DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
+                            RadiusElement->SetHexBiome(EHexBiome::Lake);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 int32 ACCBaseHexagonActor::FindMinMax(bool IsX, bool IsMax)
 {
@@ -490,4 +714,55 @@ ACCItemHexagonActor* ACCBaseHexagonActor::GetHexFromIdex(FVector2D Position)
         }
     }
     return nullptr;
+}
+
+TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetFirstRadiusHex(ACCItemHexagonActor* BaseHex)
+{
+    TArray<ACCItemHexagonActor*> ReturnArray;
+    FVector2D CurrentIndex = BaseHex->GetPosition();
+    ACCItemHexagonActor* Element;
+    for (int32 i = 0; i < 6; i++)
+    {
+        FVector2D AddModfier = FirstRadiusModifier[i];
+        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        if (Element)
+        {
+            ReturnArray.Add(Element);
+        }
+    }
+    return ReturnArray;
+}
+
+TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetSecondRadiusHex(ACCItemHexagonActor* BaseHex)
+{
+    TArray<ACCItemHexagonActor*> ReturnArray;
+    FVector2D CurrentIndex = BaseHex->GetPosition();
+    ACCItemHexagonActor* Element;
+    for (int32 i = 0; i < 12; i++)
+    {
+        FVector2D AddModfier = SecondRadiusModifier[i];
+        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        if (Element)
+        {
+            ReturnArray.Add(Element);
+        }
+    }
+    return ReturnArray;
+}
+
+TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetThirdRadiusHex(ACCItemHexagonActor* BaseHex)
+{
+    TArray<ACCItemHexagonActor*> ReturnArray;
+    FVector2D CurrentIndex = BaseHex->GetPosition();
+    ACCItemHexagonActor* Element;
+    for (int32 i = 0; i < 18; i++)
+    {
+        FVector2D AddModfier = ThirdRadiusModifier[i];
+        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        if (Element)
+        {
+            ReturnArray.Add(Element);
+        }
+    }
+    return ReturnArray;
 }

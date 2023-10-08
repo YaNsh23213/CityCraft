@@ -13,10 +13,18 @@ enum class EHexBiome : uint8
     Snow UMETA(DisplayName = "Snow"),
     Desert UMETA(DisplayName = "Desert"),
     Meadow UMETA(DisplayName = "Meadow"),
-    Plain UMETA(DisplayName = "Plain"),
     Ocean UMETA(DisplayName = "Ocean"),
     Coast UMETA(DisplayName = "Coast"),
-    Lake UMETA(DisplayName = "Lake")
+    Lake UMETA(DisplayName = "Lake"),
+    SnowHill UMETA(DisplayName = "SnowHill"),
+    DesertHill UMETA(DisplayName = "DesertHill"),
+    MeadowHill UMETA(DisplayName = "MeadowHill"),
+    SnowHillWood UMETA(DisplayName = "SnowHillWood"),
+    DesertHillWood UMETA(DisplayName = "DesertHillWood"),
+    MeadowHillWood UMETA(DisplayName = "MeadowHillWood"),
+    SnowWood UMETA(DisplayName = "SnowWood"),
+    DesertWood UMETA(DisplayName = "DesertWood"),
+    MeadowWood UMETA(DisplayName = "MeadowWood")
 };
 USTRUCT(BlueprintType)
 struct FMeshData
@@ -36,17 +44,32 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> MeadowHillMeshArray;
 
-     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> MeadowWoodMeshArray;
 
-      UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> DesertWoodMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> SnowWoodMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> MeadowHillWoodMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> DesertHillWoodMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> SnowHillWoodMeshArray;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> SnowMeshArray;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> SnowHillMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> LakeMeshArray;
 };
 UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {

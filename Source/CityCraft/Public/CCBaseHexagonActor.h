@@ -40,13 +40,13 @@ protected:
 
     // Generator Config
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
     float PercentSnow = 0.33;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
     float PercentSnowOverlap = 0.1;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
     float PercentDesert = 0.33;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
@@ -57,6 +57,33 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 150))
     int32 MaxOverlapAmount = 200;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float SnowHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float MeadowHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float DesertHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float MeadowWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float SnowWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float DesertWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 20))
+    int32 AmountLake = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float StartedChanceUpLake = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float StepChanceDownLake = 0.5;
 
     // Watter settings
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0))
@@ -78,4 +105,14 @@ private:
     int32 FindMinMax(bool IsX, bool IsMax);
 
     ACCItemHexagonActor* GetHexFromIdex(FVector2D Position);
+
+    TArray<ACCItemHexagonActor*> GetFirstRadiusHex(ACCItemHexagonActor* BaseHex);
+    TArray<ACCItemHexagonActor*> GetSecondRadiusHex(ACCItemHexagonActor* BaseHex);
+    TArray<ACCItemHexagonActor*> GetThirdRadiusHex(ACCItemHexagonActor* BaseHex);
+
+    TArray<FVector2D> FirstRadiusModifier = {{0, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}};
+    TArray<FVector2D> SecondRadiusModifier = {
+        {0, 2}, {1, 1}, {2, 0}, {2, -1}, {2, -2}, {1, -2}, {0, -2}, {-1, -1}, {-2, 0}, {-2, 1}, {-2, 2}, {-1, 2}};
+    TArray<FVector2D> ThirdRadiusModifier = {{0, 3}, {1, 2}, {2, 1}, {3, 0}, {3, -1}, {3, -2}, {3, -3}, {2, -3}, {1, -3}, {0, -3}, {-1, -2},
+        {-2, -1}, {-3, 0}, {-3, 1}, {-3, 2}, {-3, 3}, {-2, 3}, {-1, 3}};
 };
