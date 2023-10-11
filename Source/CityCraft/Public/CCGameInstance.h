@@ -6,6 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "CCGameInstance.generated.h"
 
+class ACCItemHexagonActor;
+
 UENUM(BlueprintType)
 enum class EHexBiome : uint8
 {
@@ -70,6 +72,33 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> LakeMeshArray;
+};
+USTRUCT(BlueprintType)
+struct FRadiusReturnHexStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    ACCItemHexagonActor* HexRadius;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 IndexRadiusHex;
+};
+USTRUCT(BlueprintType)
+struct FLakeModuleCorrectionStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<int32> ArrayLandIndex;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UStaticMesh* LakeMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 RotationCorrection = 30;
 };
 UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {

@@ -3,6 +3,7 @@
 #include "CCBaseHexagonActor.h"
 #include "CCItemHexagonActor.h"
 #include "Components/StaticMeshComponent.h"
+#include "CCGameInstance.h"
 
 ACCBaseHexagonActor::ACCBaseHexagonActor()
 {
@@ -595,27 +596,29 @@ void ACCBaseHexagonActor::StartGenerate()
             auto FirstRadiusArray = GetFirstRadiusHex(HexArray[TempIndex]);
             auto SecondRadiusArray = GetSecondRadiusHex(HexArray[TempIndex]);
             auto ThirdRadiusArray = GetThirdRadiusHex(HexArray[TempIndex]);
+
             for (auto RadiusElement : FirstRadiusArray)
             {
                 if (FMath::FRandRange(0.0f, 1.0f) < StartedChanceUpLake)
                 {
-                    RadiusElement->MeshLocation->SetStaticMesh(
+                    RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                         DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
-                    RadiusElement->SetHexBiome(EHexBiome::Lake);
+                    RadiusElement.HexRadius->SetHexBiome(EHexBiome::Lake);
                 }
             }
+
             for (auto RadiusElement : SecondRadiusArray)
             {
-                auto TempRadius = GetFirstRadiusHex(RadiusElement);
+                auto TempRadius = GetFirstRadiusHex(RadiusElement.HexRadius);
                 for (auto TempRadiusElement : TempRadius)
                 {
-                    if (TempRadiusElement->GetHexBiome() == EHexBiome::Lake)
+                    if (TempRadiusElement.HexRadius->GetHexBiome() == EHexBiome::Lake)
                     {
                         if (FMath::FRandRange(0.0f, 1.0f) < FMath::Clamp(StartedChanceUpLake - StepChanceDownLake, 0.0f, 10.0f))
                         {
-                            RadiusElement->MeshLocation->SetStaticMesh(
+                            RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                                 DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
-                            RadiusElement->SetHexBiome(EHexBiome::Lake);
+                            RadiusElement.HexRadius->SetHexBiome(EHexBiome::Lake);
                             break;
                         }
                     }
@@ -623,19 +626,57 @@ void ACCBaseHexagonActor::StartGenerate()
             }
             for (auto RadiusElement : ThirdRadiusArray)
             {
-                auto TempRadius = GetFirstRadiusHex(RadiusElement);
+                auto TempRadius = GetFirstRadiusHex(RadiusElement.HexRadius);
                 for (auto TempRadiusElement : TempRadius)
                 {
-                    if (TempRadiusElement->GetHexBiome() == EHexBiome::Lake)
+                    if (TempRadiusElement.HexRadius->GetHexBiome() == EHexBiome::Lake)
                     {
                         if (FMath::FRandRange(0.0f, 1.0f) <
                             FMath::Clamp(StartedChanceUpLake - StepChanceDownLake - StepChanceDownLake, 0.0f, 10.0f))
                         {
-                            RadiusElement->MeshLocation->SetStaticMesh(
+                            RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                                 DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
-                            RadiusElement->SetHexBiome(EHexBiome::Lake);
+                            RadiusElement.HexRadius->SetHexBiome(EHexBiome::Lake);
                             break;
                         }
+                    }
+                }
+            }
+        }
+    }
+    // ModulLake
+    if (NeedGenerateModuleLake)
+    {
+        TArray<ACCItemHexagonActor*> ArrayHexLake;
+        for (auto Lake : HexArray)
+        {
+            if (Lake->GetHexBiome() == EHexBiome::Lake)
+            {
+                ArrayHexLake.Add(Lake);
+            }
+        }
+        if (ArrayHexLake.Num())
+        {
+            for (auto LakeItem : ArrayHexLake)
+            {
+                auto FirstRadius = GetFirstRadiusHex(LakeItem);
+                TArray<int32> ArrayGroundLake;
+                for (auto LakeFirstRadius : FirstRadius)
+                {
+                    if (LakeFirstRadius.HexRadius->GetHexBiome() != EHexBiome::Lake)
+                    {
+                        ArrayGroundLake.Add(LakeFirstRadius.IndexRadiusHex);
+                    }
+                }
+                for (auto HexModuleLake : LakeModuleCorrection)
+                {
+                    if (IsEqual(HexModuleLake.ArrayLandIndex, ArrayGroundLake))
+                    {
+                        LakeItem->MeshLocation->SetStaticMesh(HexModuleLake.LakeMesh);
+                        auto TempLocation = LakeItem->MeshLocation->GetRelativeRotation();
+                        TempLocation.Yaw += HexModuleLake.RotationCorrection-60;
+                        LakeItem->MeshLocation->SetWorldRotation(TempLocation);
+                        break;
                     }
                 }
             }
@@ -716,16 +757,17 @@ ACCItemHexagonActor* ACCBaseHexagonActor::GetHexFromIdex(FVector2D Position)
     return nullptr;
 }
 
-TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetFirstRadiusHex(ACCItemHexagonActor* BaseHex)
+TArray<FRadiusReturnHexStruct> ACCBaseHexagonActor::GetFirstRadiusHex(ACCItemHexagonActor* BaseHex)
 {
-    TArray<ACCItemHexagonActor*> ReturnArray;
+    TArray<FRadiusReturnHexStruct> ReturnArray;
     FVector2D CurrentIndex = BaseHex->GetPosition();
-    ACCItemHexagonActor* Element;
+    FRadiusReturnHexStruct Element;
     for (int32 i = 0; i < 6; i++)
     {
         FVector2D AddModfier = FirstRadiusModifier[i];
-        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
-        if (Element)
+        Element.HexRadius = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        Element.IndexRadiusHex = i + 1;
+        if (Element.HexRadius)
         {
             ReturnArray.Add(Element);
         }
@@ -733,16 +775,17 @@ TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetFirstRadiusHex(ACCItemHexag
     return ReturnArray;
 }
 
-TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetSecondRadiusHex(ACCItemHexagonActor* BaseHex)
+TArray<FRadiusReturnHexStruct> ACCBaseHexagonActor::GetSecondRadiusHex(ACCItemHexagonActor* BaseHex)
 {
-    TArray<ACCItemHexagonActor*> ReturnArray;
+    TArray<FRadiusReturnHexStruct> ReturnArray;
     FVector2D CurrentIndex = BaseHex->GetPosition();
-    ACCItemHexagonActor* Element;
+    FRadiusReturnHexStruct Element;
     for (int32 i = 0; i < 12; i++)
     {
         FVector2D AddModfier = SecondRadiusModifier[i];
-        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
-        if (Element)
+        Element.HexRadius = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        Element.IndexRadiusHex = i + 1;
+        if (Element.HexRadius)
         {
             ReturnArray.Add(Element);
         }
@@ -750,19 +793,36 @@ TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetSecondRadiusHex(ACCItemHexa
     return ReturnArray;
 }
 
-TArray<ACCItemHexagonActor*> ACCBaseHexagonActor::GetThirdRadiusHex(ACCItemHexagonActor* BaseHex)
+TArray<FRadiusReturnHexStruct> ACCBaseHexagonActor::GetThirdRadiusHex(ACCItemHexagonActor* BaseHex)
 {
-    TArray<ACCItemHexagonActor*> ReturnArray;
+    TArray<FRadiusReturnHexStruct> ReturnArray;
     FVector2D CurrentIndex = BaseHex->GetPosition();
-    ACCItemHexagonActor* Element;
+    FRadiusReturnHexStruct Element;
     for (int32 i = 0; i < 18; i++)
     {
         FVector2D AddModfier = ThirdRadiusModifier[i];
-        Element = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
-        if (Element)
+        Element.HexRadius = GetHexFromIdex({CurrentIndex.X + AddModfier.X, CurrentIndex.Y + AddModfier.Y});
+        Element.IndexRadiusHex = i + 1;
+        if (Element.HexRadius)
         {
             ReturnArray.Add(Element);
         }
     }
     return ReturnArray;
+}
+
+bool ACCBaseHexagonActor::IsEqual(TArray<int32> Array1, TArray<int32> Array2)
+{
+    if (Array1.Num() == Array2.Num())
+    {
+        for (int32 i = 0; i < Array1.Num(); i++)
+        {
+            if (Array1[i] != Array2[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }

@@ -85,6 +85,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
     float StepChanceDownLake = 0.5;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    bool NeedGenerateModuleLake = true;
+
     // Watter settings
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0))
     bool HaveOcean = true;
@@ -98,6 +101,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FMeshData DataMesh;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FLakeModuleCorrectionStruct> LakeModuleCorrection;
+
 private:
     UPROPERTY()
     TArray<ACCItemHexagonActor*> HexArray;
@@ -106,9 +112,11 @@ private:
 
     ACCItemHexagonActor* GetHexFromIdex(FVector2D Position);
 
-    TArray<ACCItemHexagonActor*> GetFirstRadiusHex(ACCItemHexagonActor* BaseHex);
-    TArray<ACCItemHexagonActor*> GetSecondRadiusHex(ACCItemHexagonActor* BaseHex);
-    TArray<ACCItemHexagonActor*> GetThirdRadiusHex(ACCItemHexagonActor* BaseHex);
+    TArray<FRadiusReturnHexStruct> GetFirstRadiusHex(ACCItemHexagonActor* BaseHex);
+    TArray<FRadiusReturnHexStruct> GetSecondRadiusHex(ACCItemHexagonActor* BaseHex);
+    TArray<FRadiusReturnHexStruct> GetThirdRadiusHex(ACCItemHexagonActor* BaseHex);
+
+    bool IsEqual(TArray<int32> Array1, TArray<int32> Array2);
 
     TArray<FVector2D> FirstRadiusModifier = {{0, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}};
     TArray<FVector2D> SecondRadiusModifier = {
