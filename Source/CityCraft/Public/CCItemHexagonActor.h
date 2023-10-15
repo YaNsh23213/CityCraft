@@ -24,7 +24,7 @@ public:
     void UpdatePosition(int32 X, int32 Y);
     FVector2D GetPosition() const { return Position; }
 
-    void SetHexBiome(EHexBiome HexStatus) { HexBiome = HexStatus; }
+    void SetHexBiome(EHexBiome HexStatus);
     EHexBiome GetHexBiome() { return HexBiome; }
 
     UStaticMeshComponent* GetHexMesh() { return HexMesh; }
@@ -35,6 +35,16 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
     USceneComponent* SceneComponent;
 
+    // HexPlayInfo
+    FStorageStruct GetHextorage() const { return Hextorage; }
+    void SetHextorage(FStorageStruct Data) { Hextorage = Data; }
+
+    FProductivityStruct GetHexProductivity() const { return HexProductivity; }
+    void SetHexProductivity(FProductivityStruct Data) { HexProductivity = Data; }
+
+    FText GetNameBiome();
+    FText GetFreeStatusBiome() const { return FText::FromString(NameOwnFruction); };
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UStaticMeshComponent* HexMesh;
@@ -42,9 +52,15 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    FStorageStruct Hextorage;
+    FProductivityStruct HexProductivity;
+
     UPROPERTY()
     EHexBiome HexBiome = EHexBiome::Clear;
 
     UPROPERTY()
     FVector2D Position = {0, 0};
+
+    UPROPERTY()
+    FString NameOwnFruction = "None";
 };

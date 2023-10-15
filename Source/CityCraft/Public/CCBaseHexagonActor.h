@@ -76,7 +76,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
     float DesertWoodFrequency = 0.5;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 20))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
     int32 AmountLake = 2;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
@@ -97,6 +97,9 @@ protected:
     bool ContinentTwo = false;
 
     virtual void BeginPlay() override;
+
+    UFUNCTION(BlueprintCallable)
+    FMeshData GetMeshData() const { return DataMesh; }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FMeshData DataMesh;

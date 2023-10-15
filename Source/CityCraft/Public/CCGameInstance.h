@@ -100,6 +100,36 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RotationCorrection = 30;
 };
+USTRUCT(BlueprintType)
+struct FStorageStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 EatStorage = 0;
+
+     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 ProductionStorage = 0;
+
+     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 GoldStorage = 0;
+};
+USTRUCT(BlueprintType)
+struct FProductivityStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 EatProductivity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 ProductionProductivity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 GoldProductivity;
+};
 UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {
     GENERATED_BODY()

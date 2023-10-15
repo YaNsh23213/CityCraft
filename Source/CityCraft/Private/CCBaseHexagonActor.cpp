@@ -663,7 +663,7 @@ void ACCBaseHexagonActor::StartGenerate()
                 TArray<int32> ArrayGroundLake;
                 for (auto LakeFirstRadius : FirstRadius)
                 {
-                    if (LakeFirstRadius.HexRadius->GetHexBiome() != EHexBiome::Lake)
+                    if (LakeFirstRadius.HexRadius->GetHexBiome() == EHexBiome::Lake)
                     {
                         ArrayGroundLake.Add(LakeFirstRadius.IndexRadiusHex);
                     }
@@ -673,8 +673,10 @@ void ACCBaseHexagonActor::StartGenerate()
                     if (IsEqual(HexModuleLake.ArrayLandIndex, ArrayGroundLake))
                     {
                         LakeItem->MeshLocation->SetStaticMesh(HexModuleLake.LakeMesh);
+
+                        //SetCorrectionRotator
                         auto TempLocation = LakeItem->MeshLocation->GetRelativeRotation();
-                        TempLocation.Yaw += HexModuleLake.RotationCorrection-60;
+                        TempLocation.Yaw += HexModuleLake.RotationCorrection - 30;
                         LakeItem->MeshLocation->SetWorldRotation(TempLocation);
                         break;
                     }
