@@ -6,12 +6,18 @@
 #include "GameFramework/PlayerController.h"
 #include "CCBasePlayerController.generated.h"
 
-/**
- * 
- */
+class ACCBasePlayerPawn;
+
 UCLASS()
 class CITYCRAFT_API ACCBasePlayerController : public APlayerController
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+public:
+    void InitPawn(FVector Location);
+
+protected:
+    virtual void BeginPlay() override;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    TSubclassOf<ACCBasePlayerPawn> PlayerPawnClass;
 };

@@ -24,6 +24,8 @@ public:
     void InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX);
     void StartGenerate();
 
+    TArray<ACCItemHexagonActor*> GetHexArray() const { return HexArray; }
+
 protected:
     // Base hexagon item
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")

@@ -4,6 +4,7 @@
 #include "CCItemHexagonActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "CCGameInstance.h"
+#include "Player/CCMainGameMode.h"
 
 ACCBaseHexagonActor::ACCBaseHexagonActor()
 {
@@ -674,7 +675,7 @@ void ACCBaseHexagonActor::StartGenerate()
                     {
                         LakeItem->MeshLocation->SetStaticMesh(HexModuleLake.LakeMesh);
 
-                        //SetCorrectionRotator
+                        // SetCorrectionRotator
                         auto TempLocation = LakeItem->MeshLocation->GetRelativeRotation();
                         TempLocation.Yaw += HexModuleLake.RotationCorrection - 30;
                         LakeItem->MeshLocation->SetWorldRotation(TempLocation);
@@ -683,6 +684,11 @@ void ACCBaseHexagonActor::StartGenerate()
                 }
             }
         }
+    }
+    ACCMainGameMode* GameMode = Cast<ACCMainGameMode>(GetWorld()->GetAuthGameMode());
+    if (GameMode)
+    {
+        GameMode->AfterGeneration(this);
     }
 }
 int32 ACCBaseHexagonActor::FindMinMax(bool IsX, bool IsMax)
