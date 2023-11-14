@@ -35,6 +35,10 @@
 		{
 			"Name": "JsonBlueprintUtilities",
 			"Enabled": true
+		},
+		{
+			"Name": "Water",
+			"Enabled": true
 		}
 	]
 }
