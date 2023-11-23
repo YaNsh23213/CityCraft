@@ -43,7 +43,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         if (i % 2 != 0)
         {
 
-            StartLocaion.Y += (FMath::Sqrt(3) / 2 * 100);
+            StartLocaion.Y += (FMath::Sqrt(3) / 2 * (HexDiameter/2));
             if (i != 0)
             {
                 CenterIndexOffset++;
@@ -72,7 +72,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         StartLocaion.X += (HexDiameter / 4 + HexDiameter / 2) * i;
         if (i % 2 != 0)
         {
-            StartLocaion.Y += (FMath::Sqrt(3) / 2 * 100);
+            StartLocaion.Y += (FMath::Sqrt(3) / 2 * (HexDiameter / 2));
             if (i != 0)
             {
                 CenterIndexOffset++;
@@ -105,7 +105,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         {
             if (i % 2 != 0)
             {
-                StartLocaion.Y -= (FMath::Sqrt(3) / 2 * 100);
+                StartLocaion.Y -= (FMath::Sqrt(3) / 2 * (HexDiameter / 2));
                 CenterIndexOffset--;
             }
 
@@ -140,7 +140,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
 
         if (i % 2 != 0)
         {
-            StartLocaion.Y -= (FMath::Sqrt(3) / 2 * 100);
+            StartLocaion.Y -= (FMath::Sqrt(3) / 2 * (HexDiameter / 2));
             CenterIndexOffset--;
         }
 
