@@ -43,7 +43,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         if (i % 2 != 0)
         {
 
-            StartLocaion.Y += (FMath::Sqrt(3) / 2 * (HexDiameter/2));
+            StartLocaion.Y += (FMath::Sqrt(3) / 2 * (HexDiameter / 2));
             if (i != 0)
             {
                 CenterIndexOffset++;
@@ -681,6 +681,46 @@ void ACCBaseHexagonActor::StartGenerate()
                         LakeItem->MeshLocation->SetWorldRotation(TempLocation);
                         break;
                     }
+                }
+                int32 SnowAmount = 0;
+                int32 SandAmount = 0;
+                int32 MeadowAmount = 0;
+                UMaterialInstanceDynamic* TempMat = nullptr;
+                TempMat = UMaterialInstanceDynamic::Create(Cast<UMaterial>(LakeItem->MeshLocation->GetMaterial(0)), this);
+                LakeItem->MeshLocation->SetMaterial(0, TempMat);
+                for (auto MaterialCorrectionElement : FirstRadius)
+                {
+                    EHexBiome TempBiome = MaterialCorrectionElement.HexRadius->GetHexBiome();
+                    if (TempBiome == EHexBiome::Snow || TempBiome == EHexBiome::SnowHill || TempBiome == EHexBiome::SnowHillWood ||
+                        TempBiome == EHexBiome::SnowWood)
+                    {
+                        SnowAmount++;
+                        continue;
+                    }
+                    else if (TempBiome == EHexBiome::Desert || TempBiome == EHexBiome::DesertHill ||
+                             TempBiome == EHexBiome::DesertHillWood || TempBiome == EHexBiome::DesertWood)
+                    {
+                        SandAmount++;
+                        continue;
+                    }
+                    else if (TempBiome == EHexBiome::Meadow || TempBiome == EHexBiome::MeadowHill ||
+                             TempBiome == EHexBiome::MeadowHillWood || TempBiome == EHexBiome::MeadowWood)
+                    {
+                        MeadowAmount++;
+                        continue;
+                    }
+                }
+                if (SnowAmount >= MeadowAmount && SnowAmount > SandAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 1.0f);
+                }
+                else if (SandAmount >= SnowAmount && SandAmount > MeadowAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 0.5f);
+                }
+                else if (MeadowAmount >= SnowAmount && MeadowAmount > SandAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 0.0f);
                 }
             }
         }
