@@ -10,10 +10,11 @@ UCLASS()
 class CITYCRAFT_API UPTBaseMinigameWidget : public UUserWidget
 {
     GENERATED_BODY()
+public:
 
 protected:
-
     virtual void NativeConstruct() override;
 
-
+private:
+  
 };

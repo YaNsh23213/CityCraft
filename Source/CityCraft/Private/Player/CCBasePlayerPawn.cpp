@@ -85,6 +85,7 @@ void ACCBasePlayerPawn::LeftMouseClick()
             const auto TempActor = Cast<ACCItemHexagonActor>(HitResult.GetActor());
             if (TempActor)
             {
+                TempActor->InteractionItem();
                 UE_LOG(LogTemp, Warning, TEXT("Actor: %s"), *GetEnumAsString(TempActor->GetHexBiome()).ToString());
                 UpdateWidgetInfoFromHexInfo(TempActor->GetHextorage(), TempActor->GetHexProductivity(), TempActor->GetNameBiome(),
                     TempActor->GetFreeStatusBiome(), nullptr);

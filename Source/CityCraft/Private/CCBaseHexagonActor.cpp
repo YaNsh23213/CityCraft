@@ -553,7 +553,7 @@ void ACCBaseHexagonActor::StartGenerate()
         {
             if (WoodMeadowArr[TempIndex]->GetHexBiome() == EHexBiome::Meadow)
             {
-                WoodMeadowArr[TempIndex]->SetHexBiome(EHexBiome::DesertWood);
+                WoodMeadowArr[TempIndex]->SetHexBiome(EHexBiome::MeadowWood);
                 WoodMeadowArr[TempIndex]->MeshLocation->SetStaticMesh(
                     DataMesh.MeadowWoodMeshArray[int(FMath::RandRange(0, DataMesh.MeadowWoodMeshArray.Num() - 1))]);
             }
@@ -729,6 +729,23 @@ void ACCBaseHexagonActor::StartGenerate()
     if (GameMode)
     {
         GameMode->AfterGeneration(this);
+    }
+}
+void ACCBaseHexagonActor::SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex)
+{
+    if (HexArray.IsValidIndex(IndexArrayHex))
+    {
+        FTransform OldTransform = HexArray[IndexArrayHex]->GetTransform();
+        FVector2D OldVector = HexArray[IndexArrayHex]->GetPosition();
+        if (ReplaceHexClass)
+        {
+            ACCItemHexagonActor* NewActor = GetWorld()->SpawnActor<ACCItemHexagonActor>(ReplaceHexClass, OldTransform);
+            NewActor->UpdatePosition(OldVector.X, OldVector.Y);
+
+            ACCItemHexagonActor* OldActor = HexArray[IndexArrayHex];
+            OldActor->Destroy();
+            HexArray[IndexArrayHex] = NewActor;
+        }
     }
 }
 int32 ACCBaseHexagonActor::FindMinMax(bool IsX, bool IsMax)

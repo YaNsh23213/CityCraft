@@ -41,6 +41,11 @@ FText ACCItemHexagonActor::GetNameBiome()
     return FText ::FromString("");
 }
 
+void ACCItemHexagonActor::InteractionItem()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Item interaction"))
+}
+
 void ACCItemHexagonActor::BeginPlay()
 {
     Super::BeginPlay();

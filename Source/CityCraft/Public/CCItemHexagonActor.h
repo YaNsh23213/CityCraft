@@ -45,6 +45,9 @@ public:
     FText GetNameBiome();
     FText GetFreeStatusBiome() const { return FText::FromString(NameOwnFruction); };
 
+    // Interaction
+    virtual void InteractionItem();
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UStaticMeshComponent* HexMesh;

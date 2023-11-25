@@ -8,6 +8,7 @@
 #include "CCBaseHexagonActor.generated.h"
 
 class ACCItemHexagonActor;
+class ACCTownHexagonActor;
 
 UCLASS()
 class CITYCRAFT_API ACCBaseHexagonActor : public AActor
@@ -26,10 +27,17 @@ public:
 
     TArray<ACCItemHexagonActor*> GetHexArray() const { return HexArray; }
 
+    void SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex);
+
+    TSubclassOf<ACCItemHexagonActor> GetTownClass() const { return TownHexClass; }
+
 protected:
     // Base hexagon item
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
     TSubclassOf<ACCItemHexagonActor> HexClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
+    TSubclassOf<ACCItemHexagonActor> TownHexClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
     int32 HexDiameterC = 200;

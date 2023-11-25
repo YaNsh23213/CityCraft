@@ -28,6 +28,7 @@ void ACCMainGameMode::AfterGeneration(ACCBaseHexagonActor* GenetationActor)
             {
                 SpawnIndex = ArrayHex[Result]->GetPosition();
                 SpawnPosition = ArrayHex[Result]->GetActorLocation();
+                GenetationActor->SpawnAndReplace(GenetationActor->GetTownClass(), Result);
                 break;
             }
         }
