@@ -14,6 +14,10 @@ ACCItemHexagonActor::ACCItemHexagonActor()
     HexMesh->SetupAttachment(RootComponent);
     MeshLocation = CreateDefaultSubobject<UStaticMeshComponent>("MeshMap");
     MeshLocation->SetupAttachment(RootComponent);
+    Outline = CreateDefaultSubobject<UStaticMeshComponent>("Outline");
+    Outline->SetupAttachment(RootComponent);
+    SelectedOutMesh = CreateDefaultSubobject<UStaticMeshComponent>("SelectedOutMesh");
+    SelectedOutMesh->SetupAttachment(RootComponent);
 }
 
 FText ACCItemHexagonActor::GetNameBiome()
@@ -52,8 +56,14 @@ void ACCItemHexagonActor::BeginPlay()
     const auto Material = HexMesh->GetMaterial(0);
     UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Material, this);
     HexMesh->SetMaterial(0, DynamicMaterial);
+    // const auto MaterialOut = SelectedMesh->GetMaterial(0);
+    // UMaterialInstanceDynamic* DynamicMaterialOut = UMaterialInstanceDynamic::Create(MaterialOut, this);
+    // SelectedMesh->SetMaterial(0, DynamicMaterialOut);
 }
-
+void ACCItemHexagonActor::SetIsSelect(bool Value)
+{
+    Value ? SelectedOutMesh->SetVisibility(true) : SelectedOutMesh->SetVisibility(false);
+}
 void ACCItemHexagonActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);

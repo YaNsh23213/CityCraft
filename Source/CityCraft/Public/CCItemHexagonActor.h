@@ -33,6 +33,12 @@ public:
     UStaticMeshComponent* MeshLocation;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
+    UStaticMeshComponent* Outline;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
+    UStaticMeshComponent* SelectedOutMesh;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
     USceneComponent* SceneComponent;
 
     // HexPlayInfo
@@ -47,6 +53,8 @@ public:
 
     // Interaction
     virtual void InteractionItem();
+
+    void SetIsSelect(bool Value);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

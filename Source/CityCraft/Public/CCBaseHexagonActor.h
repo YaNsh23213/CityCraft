@@ -31,6 +31,8 @@ public:
 
     TSubclassOf<ACCItemHexagonActor> GetTownClass() const { return TownHexClass; }
 
+
+
 protected:
     // Base hexagon item
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")

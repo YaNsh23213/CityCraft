@@ -39,6 +39,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UCCBasePlayerWidget> BasePlayerWidgetClass;
 
+    UPROPERTY()
+    ACCItemHexagonActor* CurrentSelected;
+
 private:
     UFUNCTION()
     void MoveUpDown(float Value);

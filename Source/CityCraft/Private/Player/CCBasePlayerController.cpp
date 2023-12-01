@@ -11,6 +11,7 @@ void ACCBasePlayerController::InitPawn(FVector Location)
     Transform.SetLocation(Location);
     auto TempActor = GetWorld()->SpawnActor<ACCBasePlayerPawn>(PlayerPawnClass, Transform, SpawnParam);
     Possess(TempActor);
+    bShowMouseCursor = true;
 }
 
 void ACCBasePlayerController::BeginPlay() {}

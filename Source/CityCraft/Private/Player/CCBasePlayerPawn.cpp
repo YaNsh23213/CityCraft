@@ -82,13 +82,18 @@ void ACCBasePlayerPawn::LeftMouseClick()
         auto TargetSpawn = GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility);
         if (HitResult.bBlockingHit && HitResult.GetActor())
         {
-            const auto TempActor = Cast<ACCItemHexagonActor>(HitResult.GetActor());
-            if (TempActor)
+            if (CurrentSelected)
             {
-                TempActor->InteractionItem();
-                UE_LOG(LogTemp, Warning, TEXT("Actor: %s"), *GetEnumAsString(TempActor->GetHexBiome()).ToString());
-                UpdateWidgetInfoFromHexInfo(TempActor->GetHextorage(), TempActor->GetHexProductivity(), TempActor->GetNameBiome(),
-                    TempActor->GetFreeStatusBiome(), nullptr);
+                CurrentSelected->SetIsSelect(false);
+            }
+            CurrentSelected = Cast<ACCItemHexagonActor>(HitResult.GetActor());
+            if (CurrentSelected)
+            {
+                CurrentSelected->InteractionItem();
+                CurrentSelected->SetIsSelect(true);
+                UE_LOG(LogTemp, Warning, TEXT("Actor: %s"), *GetEnumAsString(CurrentSelected->GetHexBiome()).ToString());
+                UpdateWidgetInfoFromHexInfo(CurrentSelected->GetHextorage(), CurrentSelected->GetHexProductivity(),
+                    CurrentSelected->GetNameBiome(), CurrentSelected->GetFreeStatusBiome(), nullptr);
                 BasePlayerWidget->AddToViewport();
             }
         }
