@@ -31,8 +31,6 @@ public:
 
     TSubclassOf<ACCItemHexagonActor> GetTownClass() const { return TownHexClass; }
 
-
-
 protected:
     // Base hexagon item
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
@@ -108,6 +106,19 @@ protected:
         EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, EditCondition = "HaveOcean == true"))
     bool ContinentTwo = false;
 
+    // RiverSettings
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 AmountRiver = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 MinLengthRiver = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 MaxLengthRiver = 2;
+
+    //
+
     virtual void BeginPlay() override;
 
     UFUNCTION(BlueprintCallable)
@@ -122,6 +133,11 @@ protected:
 private:
     UPROPERTY()
     TArray<ACCItemHexagonActor*> HexArray;
+
+    void MakeRiver(ACCItemHexagonActor* HexCurrent);
+
+    bool CheackValidIndexRiver(int32 CurrentIndex);
+    bool CheackValidBiomToRiver(ACCItemHexagonActor* CurrentHex);
 
     int32 FindMinMax(bool IsX, bool IsMax);
 

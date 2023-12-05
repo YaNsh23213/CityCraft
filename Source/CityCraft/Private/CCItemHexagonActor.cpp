@@ -40,6 +40,7 @@ FText ACCItemHexagonActor::GetNameBiome()
         case EHexBiome::SnowWood: return FText ::FromString("Snow Wood"); break;
         case EHexBiome::DesertWood: return FText ::FromString("Desert Wood"); break;
         case EHexBiome::MeadowWood: return FText ::FromString("Meadow Wood"); break;
+        case EHexBiome::River: return FText ::FromString("River"); break;
         default: return FText ::FromString(""); break;
     }
     return FText ::FromString("");
@@ -180,6 +181,12 @@ void ACCItemHexagonActor::SetHexBiome(EHexBiome HexStatus)
             TempStruct.EatProductivity = 2;
             TempStruct.ProductionProductivity = 1;
             TempStruct.GoldProductivity = 0;
+            SetHexProductivity(TempStruct);
+            break;
+        case EHexBiome::River:
+            TempStruct.EatProductivity = 1;
+            TempStruct.ProductionProductivity = 0;
+            TempStruct.GoldProductivity = 3;
             SetHexProductivity(TempStruct);
             break;
         default: break;

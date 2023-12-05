@@ -17,6 +17,7 @@ enum class EHexBiome : uint8
     Meadow UMETA(DisplayName = "Meadow"),
     Ocean UMETA(DisplayName = "Ocean"),
     Coast UMETA(DisplayName = "Coast"),
+    River UMETA(DisplayName = "River"),
     Lake UMETA(DisplayName = "Lake"),
     SnowHill UMETA(DisplayName = "SnowHill"),
     DesertHill UMETA(DisplayName = "DesertHill"),
@@ -72,6 +73,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<UStaticMesh*> LakeMeshArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<UStaticMesh*> RiverMeshArray;
 };
 USTRUCT(BlueprintType)
 struct FRadiusReturnHexStruct
@@ -109,10 +113,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EatStorage = 0;
 
-     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ProductionStorage = 0;
 
-     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 GoldStorage = 0;
 };
 USTRUCT(BlueprintType)

@@ -725,12 +725,113 @@ void ACCBaseHexagonActor::StartGenerate()
             }
         }
     }
+    // RiverGeneration
+
+    TArray<int32> RiverIndex;
+    bool ValidRiverIndex = false;
+    for (int32 m = 0; m < AmountRiver; m++)
+    {
+        while (!ValidRiverIndex)
+        {
+            int32 TempIndexRiver = FMath::RandRange(0, HexArray.Num() - 1);
+            if (CheackValidIndexRiver(TempIndexRiver))
+            {
+                for (int32 Temp : RiverIndex)
+                {
+                    if (Temp == TempIndexRiver)
+                    {
+                        continue;
+                    }
+                }
+                RiverIndex.Add(TempIndexRiver);
+                ValidRiverIndex = true;
+            }
+        }
+        ValidRiverIndex = false;
+    }
+    for (int32 CreateIndexRiver : RiverIndex)
+    {
+        // if (auto ValideteElement = HexArray[CreateIndexRiver])
+        // {
+        MakeRiver(HexArray[CreateIndexRiver]);
+        // }
+    }
+
+    //
     ACCMainGameMode* GameMode = Cast<ACCMainGameMode>(GetWorld()->GetAuthGameMode());
     if (GameMode)
     {
         GameMode->AfterGeneration(this);
     }
 }
+
+bool ACCBaseHexagonActor::CheackValidIndexRiver(int32 CurrentIndex)
+{
+    if (auto ValideteElement = HexArray[CurrentIndex])
+    {
+        EHexBiome CurrentBiome = ValideteElement->GetHexBiome();
+        return CurrentBiome == EHexBiome::Snow     ? true
+               : CurrentBiome == EHexBiome::Desert ? true
+               : CurrentBiome == EHexBiome::Meadow ? true
+                                                   : false;
+    }
+    return false;
+}
+
+bool ACCBaseHexagonActor::CheackValidBiomToRiver(ACCItemHexagonActor* CurrentHex)
+{
+    if (CurrentHex)
+    {
+        EHexBiome CurrentBiome = CurrentHex->GetHexBiome();
+        return CurrentBiome == EHexBiome::Snow         ? true
+               : CurrentBiome == EHexBiome::Desert     ? true
+               : CurrentBiome == EHexBiome::Meadow     ? true
+               : CurrentBiome == EHexBiome::MeadowWood ? true
+               : CurrentBiome == EHexBiome::SnowWood   ? true
+                                                       : false;
+    }
+    return false;
+}
+
+void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
+{
+    HexCurrent->MeshLocation->SetStaticMesh(DataMesh.RiverMeshArray[int(FMath::RandRange(0, DataMesh.RiverMeshArray.Num() - 1))]);
+    HexCurrent->SetHexBiome(EHexBiome::River);
+    ACCItemHexagonActor* CurrentItem = HexCurrent;
+    ACCItemHexagonActor* OldItem=HexCurrent;
+    int32 CounterRiver = 0;
+    int32 MaxCounter = FMath::RandRange(MinLengthRiver, MaxLengthRiver);
+    for (CounterRiver; CounterRiver < MaxCounter; CounterRiver++)
+    {
+        TArray<ACCItemHexagonActor*> ArrayResult;
+        TArray<FRadiusReturnHexStruct> RusultArray = GetFirstRadiusHex(CurrentItem);
+        for (FRadiusReturnHexStruct TempRadius : RusultArray)
+        {
+            if (CheackValidBiomToRiver(TempRadius.HexRadius))
+            {
+                ArrayResult.Add(TempRadius.HexRadius);
+            }
+        }
+        if (ArrayResult.Num())
+        {
+            for (int32 n=0;n<ArrayResult.Num();n++)
+            {
+                if (ArrayResult[n]->GetName() == OldItem->GetName())
+                {
+                    ArrayResult.RemoveAt(n);
+                }
+            }
+            CurrentItem = ArrayResult[FMath::RandRange(0, ArrayResult.Num() - 1)];
+            CurrentItem->MeshLocation->SetStaticMesh(DataMesh.RiverMeshArray[int(FMath::RandRange(0, DataMesh.RiverMeshArray.Num() - 1))]);
+            CurrentItem->SetHexBiome(EHexBiome::River);
+        }
+        else
+        {
+            return;
+        }
+    }
+}
+
 void ACCBaseHexagonActor::SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex)
 {
     if (HexArray.IsValidIndex(IndexArrayHex))
