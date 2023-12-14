@@ -105,6 +105,21 @@ public:
     int32 RotationCorrection = 30;
 };
 USTRUCT(BlueprintType)
+struct FRiverModuleCorrectionStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<int32> ArrayRiverIndex;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UStaticMesh* RiverMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 RotationCorrection = 30;
+};
+USTRUCT(BlueprintType)
 struct FStorageStruct
 {
     GENERATED_USTRUCT_BODY()

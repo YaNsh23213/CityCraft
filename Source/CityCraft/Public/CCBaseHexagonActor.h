@@ -130,11 +130,18 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FLakeModuleCorrectionStruct> LakeModuleCorrection;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FRiverModuleCorrectionStruct> MainRiverModuleCorrection;
+
+     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FRiverModuleCorrectionStruct> StartRiverModuleCorrection;
+
 private:
     UPROPERTY()
     TArray<ACCItemHexagonActor*> HexArray;
 
     void MakeRiver(ACCItemHexagonActor* HexCurrent);
+    void ModuleRiver(TArray<ACCItemHexagonActor*> RiverHexArray);
 
     bool CheackValidIndexRiver(int32 CurrentIndex);
     bool CheackValidBiomToRiver(ACCItemHexagonActor* CurrentHex);

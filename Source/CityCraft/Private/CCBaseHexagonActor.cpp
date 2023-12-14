@@ -795,10 +795,12 @@ bool ACCBaseHexagonActor::CheackValidBiomToRiver(ACCItemHexagonActor* CurrentHex
 
 void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
 {
+    TArray<ACCItemHexagonActor*> RiverArray;
     HexCurrent->MeshLocation->SetStaticMesh(DataMesh.RiverMeshArray[int(FMath::RandRange(0, DataMesh.RiverMeshArray.Num() - 1))]);
     HexCurrent->SetHexBiome(EHexBiome::River);
+    RiverArray.Add(HexCurrent);
     ACCItemHexagonActor* CurrentItem = HexCurrent;
-    ACCItemHexagonActor* OldItem=HexCurrent;
+    ACCItemHexagonActor* OldItem = HexCurrent;
     int32 CounterRiver = 0;
     int32 MaxCounter = FMath::RandRange(MinLengthRiver, MaxLengthRiver);
     for (CounterRiver; CounterRiver < MaxCounter; CounterRiver++)
@@ -814,7 +816,7 @@ void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
         }
         if (ArrayResult.Num())
         {
-            for (int32 n=0;n<ArrayResult.Num();n++)
+            for (int32 n = 0; n < ArrayResult.Num(); n++)
             {
                 if (ArrayResult[n]->GetName() == OldItem->GetName())
                 {
@@ -824,10 +826,49 @@ void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
             CurrentItem = ArrayResult[FMath::RandRange(0, ArrayResult.Num() - 1)];
             CurrentItem->MeshLocation->SetStaticMesh(DataMesh.RiverMeshArray[int(FMath::RandRange(0, DataMesh.RiverMeshArray.Num() - 1))]);
             CurrentItem->SetHexBiome(EHexBiome::River);
+            RiverArray.Add(CurrentItem);
         }
         else
         {
+            ModuleRiver(RiverArray);
             return;
+        }
+    }
+    ModuleRiver(RiverArray);
+    return;
+}
+
+void ACCBaseHexagonActor::ModuleRiver(TArray<ACCItemHexagonActor*> RiverHexArray)
+{
+    for (int32 i = 0; i < RiverHexArray.Num(); i++)
+    {
+        if (i == 0 || i == RiverHexArray.Num() - 1)
+        {
+            TArray<FRadiusReturnHexStruct> TempOut = GetFirstRadiusHex(RiverHexArray[i]);
+            if (RiverHexArray.IsValidIndex(i + 1))
+            {
+                for (auto Element : TempOut)
+                {
+                    if (Element.HexRadius->GetName() == RiverHexArray[i + 1]->GetName())
+                    {
+                        for (auto ElmentModuleCorrection : StartRiverModuleCorrection)
+                        {
+                            UE_LOG(LogTemp, Display, TEXT("ElmentModuleCorrection.ArrayRiverIndex %i Element.IndexRadiusHex %i"),
+                                ElmentModuleCorrection.ArrayRiverIndex[0], Element.IndexRadiusHex)
+                            if (ElmentModuleCorrection.ArrayRiverIndex[0] == Element.IndexRadiusHex)
+                            {
+                                RiverHexArray[i]->MeshLocation->SetStaticMesh(ElmentModuleCorrection.RiverMesh);
+                                auto TempLocation = RiverHexArray[i]->MeshLocation->GetRelativeRotation();
+                                TempLocation.Yaw += ElmentModuleCorrection.RotationCorrection;
+                                RiverHexArray[i]->MeshLocation->SetWorldRotation(TempLocation);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
         }
     }
 }
