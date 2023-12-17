@@ -137,6 +137,7 @@ protected:
     TArray<FRiverModuleCorrectionStruct> StartRiverModuleCorrection;
 
 private:
+
     UPROPERTY()
     TArray<ACCItemHexagonActor*> HexArray;
 

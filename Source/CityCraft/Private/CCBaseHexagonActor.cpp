@@ -175,49 +175,37 @@ void ACCBaseHexagonActor::StartGenerate()
     // Init first world
     for (auto Element : HexArray)
     {
-        UMaterialInstanceDynamic* TempMaterial = Cast<UMaterialInstanceDynamic>(Element->GetHexMesh()->GetMaterial(0));
-        if (TempMaterial)
+        // Generate SnowLocation
+        if (PercentSnow > 0)
         {
-            // Generate SnowLocation
-            if (PercentSnow > 0)
+            if (Element->GetPosition().Y >= SnowBorder)
             {
-                if (Element->GetPosition().Y >= SnowBorder)
-                {
-                    // TO DO Action Mesh
-                    Element->MeshLocation->SetStaticMesh(
-                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::White);
-                    Element->SetHexBiome(EHexBiome::Snow);
-                    continue;
-                }
+                Element->MeshLocation->SetStaticMesh(DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
+                Element->SetHexBiome(EHexBiome::Snow);
+                continue;
+            }
 
-                if (Element->GetPosition().Y <= -SnowBorder)
-                {
-                    Element->MeshLocation->SetStaticMesh(
-                        DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::White);
-                    Element->SetHexBiome(EHexBiome::Snow);
-                    continue;
-                }
-            }
-            // Generate DesertLocation
-            if (PercentDesert > 0)
+            if (Element->GetPosition().Y <= -SnowBorder)
             {
-                if (Element->GetPosition().Y <= DesertBorder && Element->GetPosition().Y >= -DesertBorder)
-                {
-                    // TO DO Action Mesh
-                    Element->MeshLocation->SetStaticMesh(
-                        DataMesh.DesertMeshArray[int(FMath::RandRange(0, DataMesh.DesertMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::Yellow);
-                    Element->SetHexBiome(EHexBiome::Desert);
-                    continue;
-                }
+                Element->MeshLocation->SetStaticMesh(DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
+                Element->SetHexBiome(EHexBiome::Snow);
+                continue;
             }
-            // Generate MeadowLocation
-            Element->MeshLocation->SetStaticMesh(DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
-            TempMaterial->SetVectorParameterValue("Type", FColor::Green);
-            Element->SetHexBiome(EHexBiome::Meadow);
         }
+        // Generate DesertLocation
+        if (PercentDesert > 0)
+        {
+            if (Element->GetPosition().Y <= DesertBorder && Element->GetPosition().Y >= -DesertBorder)
+            {
+                Element->MeshLocation->SetStaticMesh(
+                    DataMesh.DesertMeshArray[int(FMath::RandRange(0, DataMesh.DesertMeshArray.Num() - 1))]);
+                Element->SetHexBiome(EHexBiome::Desert);
+                continue;
+            }
+        }
+        // Generate MeadowLocation
+        Element->MeshLocation->SetStaticMesh(DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
+        Element->SetHexBiome(EHexBiome::Meadow);
     }
     // ItinOverlap
     // MainOveralpSnow
@@ -229,7 +217,6 @@ void ACCBaseHexagonActor::StartGenerate()
         UE_LOG(LogTemp, Display, TEXT("PersentOverlapSnowBiome %i"), PersentOverlapSnowBiome);
         for (auto Element : HexArray)
         {
-            UMaterialInstanceDynamic* TempMaterial = Cast<UMaterialInstanceDynamic>(Element->GetHexMesh()->GetMaterial(0));
             int32 Min = 0;
             int32 Max = 0;
             int32 ChangeToOverlap = 0;
@@ -254,14 +241,12 @@ void ACCBaseHexagonActor::StartGenerate()
                 {
                     Element->MeshLocation->SetStaticMesh(
                         DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                 }
                 else
                 {
                     Element->MeshLocation->SetStaticMesh(
                         DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                     Element->SetHexBiome(EHexBiome::Meadow);
                 }
             }
@@ -286,14 +271,12 @@ void ACCBaseHexagonActor::StartGenerate()
                 {
                     Element->MeshLocation->SetStaticMesh(
                         DataMesh.SnowMeshArray[int(FMath::RandRange(0, DataMesh.SnowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::White);
                     Element->SetHexBiome(EHexBiome::Snow);
                 }
                 else
                 {
                     Element->MeshLocation->SetStaticMesh(
                         DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                     Element->SetHexBiome(EHexBiome::Meadow);
                 }
             }
@@ -309,7 +292,6 @@ void ACCBaseHexagonActor::StartGenerate()
         UE_LOG(LogTemp, Display, TEXT("PersentOverlapSnowBiome %i"), PersentOverlapDesertBiome);
         for (auto Element : HexArray)
         {
-            UMaterialInstanceDynamic* TempMaterial = Cast<UMaterialInstanceDynamic>(Element->GetHexMesh()->GetMaterial(0));
             int32 Min = 0;
             int32 Max = 0;
             int32 ChangeToOverlap = 0;
@@ -340,7 +322,6 @@ void ACCBaseHexagonActor::StartGenerate()
                 {
                     Element->MeshLocation->SetStaticMesh(
                         DataMesh.DesertMeshArray[int(FMath::RandRange(0, DataMesh.DesertMeshArray.Num() - 1))]);
-                    TempMaterial->SetVectorParameterValue("Type", FColor::Yellow);
                     Element->SetHexBiome(EHexBiome::Desert);
                 }
                 else
@@ -349,7 +330,6 @@ void ACCBaseHexagonActor::StartGenerate()
                     {
                         Element->MeshLocation->SetStaticMesh(
                             DataMesh.MeadowMeshArray[int(FMath::RandRange(0, DataMesh.MeadowMeshArray.Num() - 1))]);
-                        TempMaterial->SetVectorParameterValue("Type", FColor::Green);
                         Element->SetHexBiome(EHexBiome::Meadow);
                     }
                 }
@@ -365,16 +345,11 @@ void ACCBaseHexagonActor::StartGenerate()
         int32 OceanMedianaAmount = 0;
         FVector2D CurrentIndex = {0, 0};
         ACCItemHexagonActor *CurrentItem, *NarcoalCurrentItem = nullptr;
-        UMaterialInstanceDynamic* TempMaterial = nullptr;
         for (int32 n = 0; n < MaxBoundY + 2; n++)
         {
             CurrentItem = GetHexFromIdex(CurrentIndex);
             if (CurrentItem)
             {
-                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                    *CurrentItem->GetPosition().ToString())
-                TempMaterial = Cast<UMaterialInstanceDynamic>(CurrentItem->GetHexMesh()->GetMaterial(0));
-                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
                 CurrentItem->SetHexBiome(EHexBiome::Ocean);
             }
             if (n % 2 != 0)
@@ -397,10 +372,6 @@ void ACCBaseHexagonActor::StartGenerate()
             NarcoalCurrentItem = GetHexFromIdex(CurrentIndex);
             if (NarcoalCurrentItem)
             {
-                UE_LOG(LogTemp, Warning, TEXT("True CurrentIndex %s CurrentItem %s"), *CurrentIndex.ToString(),
-                    *NarcoalCurrentItem->GetPosition().ToString())
-                TempMaterial = Cast<UMaterialInstanceDynamic>(NarcoalCurrentItem->GetHexMesh()->GetMaterial(0));
-                TempMaterial->SetVectorParameterValue("Type", FColor::Blue);
                 NarcoalCurrentItem->SetHexBiome(EHexBiome::Ocean);
             }
             if (n % 2 != 0)
@@ -520,11 +491,9 @@ void ACCBaseHexagonActor::StartGenerate()
     // SnowWood
     i = 0;
     float WoodSnowArrHillFr = WoodSnowArr.Num() * SnowWoodFrequency;
-    UE_LOG(LogTemp, Warning, TEXT("Num ARRAY SNOW %i"), WoodSnowArr.Num());
     while (i < WoodSnowArrHillFr)
     {
         int32 TempIndex = FMath::RandRange(0, WoodSnowArr.Num() - 1);
-        UE_LOG(LogTemp, Warning, TEXT("index %i"), TempIndex);
         if (WoodSnowArr.IsValidIndex(TempIndex))
         {
             if (WoodSnowArr[TempIndex]->GetHexBiome() == EHexBiome::Snow)
@@ -752,10 +721,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     for (int32 CreateIndexRiver : RiverIndex)
     {
-        // if (auto ValideteElement = HexArray[CreateIndexRiver])
-        // {
         MakeRiver(HexArray[CreateIndexRiver]);
-        // }
     }
 
     //
@@ -797,17 +763,21 @@ bool ACCBaseHexagonActor::CheackValidBiomToRiver(ACCItemHexagonActor* CurrentHex
 void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
 {
     TArray<ACCItemHexagonActor*> RiverArray;
+
     HexCurrent->MeshLocation->SetStaticMesh(DataMesh.RiverMeshArray[int(FMath::RandRange(0, DataMesh.RiverMeshArray.Num() - 1))]);
     HexCurrent->SetHexBiome(EHexBiome::River);
     RiverArray.Add(HexCurrent);
+
     ACCItemHexagonActor* CurrentItem = HexCurrent;
     ACCItemHexagonActor* OldItem = HexCurrent;
     int32 CounterRiver = 0;
     int32 MaxCounter = FMath::RandRange(MinLengthRiver, MaxLengthRiver);
+
     for (CounterRiver; CounterRiver < MaxCounter; CounterRiver++)
     {
         TArray<ACCItemHexagonActor*> ArrayResult;
         TArray<FRadiusReturnHexStruct> RusultArray = GetFirstRadiusHex(CurrentItem);
+
         for (FRadiusReturnHexStruct TempRadius : RusultArray)
         {
             if (CheackValidBiomToRiver(TempRadius.HexRadius))
@@ -815,6 +785,7 @@ void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
                 ArrayResult.Add(TempRadius.HexRadius);
             }
         }
+
         if (ArrayResult.Num())
         {
             for (int32 n = 0; n < ArrayResult.Num(); n++)
@@ -829,13 +800,16 @@ void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
             CurrentItem->SetHexBiome(EHexBiome::River);
             RiverArray.Add(CurrentItem);
         }
+
         else
         {
             ModuleRiver(RiverArray);
             return;
         }
     }
+
     ModuleRiver(RiverArray);
+
     return;
 }
 
@@ -868,6 +842,7 @@ void ACCBaseHexagonActor::ModuleRiver(TArray<ACCItemHexagonActor*> RiverHexArray
                 TempLocation.Yaw += River.RotationCorrection;
                 RiverHexArray[i]->MeshLocation->SetWorldRotation(TempLocation);
 
+                //Generate hex mat equal biome
                 int32 SnowAmount = 0;
                 int32 SandAmount = 0;
                 int32 MeadowAmount = 0;
