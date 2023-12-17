@@ -29,10 +29,10 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USpringArmComponent* SpringArmComponent;
+    TObjectPtr<USpringArmComponent> SpringArmComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UCameraComponent* CameraComponent;
+    TObjectPtr<UCameraComponent> CameraComponent;
 
     // UI
 
@@ -40,7 +40,7 @@ protected:
     TSubclassOf<UCCBasePlayerWidget> BasePlayerWidgetClass;
 
     UPROPERTY()
-    ACCItemHexagonActor* CurrentSelected;
+    TObjectPtr<ACCItemHexagonActor> CurrentSelected;
 
 private:
     UFUNCTION()
@@ -60,7 +60,7 @@ private:
     // UI
 
     UPROPERTY()
-    UCCBasePlayerWidget* BasePlayerWidget;
+    TObjectPtr<UCCBasePlayerWidget> BasePlayerWidget;
 
     void UpdateWidgetInfoFromHexInfo(FStorageStruct DataS, FProductivityStruct DataP, FText NameHex, FText IsFree, UTexture2D* NewImage);
 };

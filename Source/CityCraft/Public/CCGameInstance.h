@@ -114,7 +114,7 @@ public:
     TArray<int32> ArrayRiverIndex;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    UStaticMesh* RiverMesh;
+    TArray<UStaticMesh*> RiverMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RotationCorrection = 30;

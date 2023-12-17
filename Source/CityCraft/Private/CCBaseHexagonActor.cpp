@@ -744,6 +744,7 @@ void ACCBaseHexagonActor::StartGenerate()
                     }
                 }
                 RiverIndex.Add(TempIndexRiver);
+                HexArray[TempIndexRiver]->SetHexBiome(EHexBiome::River);
                 ValidRiverIndex = true;
             }
         }
@@ -842,33 +843,76 @@ void ACCBaseHexagonActor::ModuleRiver(TArray<ACCItemHexagonActor*> RiverHexArray
 {
     for (int32 i = 0; i < RiverHexArray.Num(); i++)
     {
-        if (i == 0 || i == RiverHexArray.Num() - 1)
+        TArray<int32> ArrayInt;
+        TArray<FRadiusReturnHexStruct> TempOut = GetFirstRadiusHex(RiverHexArray[i]);
+        for (auto Element : TempOut)
         {
-            TArray<FRadiusReturnHexStruct> TempOut = GetFirstRadiusHex(RiverHexArray[i]);
-            if (RiverHexArray.IsValidIndex(i + 1))
+            if (Element.HexRadius->GetHexBiome() == EHexBiome::River)
             {
-                for (auto Element : TempOut)
+                if (RiverHexArray.IsValidIndex(i + 1) && RiverHexArray[i + 1]->GetName() == Element.HexRadius->GetName())
                 {
-                    if (Element.HexRadius->GetName() == RiverHexArray[i + 1]->GetName())
-                    {
-                        for (auto ElmentModuleCorrection : StartRiverModuleCorrection)
-                        {
-                            UE_LOG(LogTemp, Display, TEXT("ElmentModuleCorrection.ArrayRiverIndex %i Element.IndexRadiusHex %i"),
-                                ElmentModuleCorrection.ArrayRiverIndex[0], Element.IndexRadiusHex)
-                            if (ElmentModuleCorrection.ArrayRiverIndex[0] == Element.IndexRadiusHex)
-                            {
-                                RiverHexArray[i]->MeshLocation->SetStaticMesh(ElmentModuleCorrection.RiverMesh);
-                                auto TempLocation = RiverHexArray[i]->MeshLocation->GetRelativeRotation();
-                                TempLocation.Yaw += ElmentModuleCorrection.RotationCorrection;
-                                RiverHexArray[i]->MeshLocation->SetWorldRotation(TempLocation);
-                            }
-                        }
-                    }
+                    ArrayInt.Add(Element.IndexRadiusHex);
+                }
+                if (RiverHexArray.IsValidIndex(i - 1) && RiverHexArray[i - 1]->GetName() == Element.HexRadius->GetName())
+                {
+                    ArrayInt.Add(Element.IndexRadiusHex);
                 }
             }
         }
-        else
+        for (auto River : MainRiverModuleCorrection)
         {
+            if (IsEqual(River.ArrayRiverIndex, ArrayInt))
+            {
+                RiverHexArray[i]->MeshLocation->SetStaticMesh(River.RiverMesh[int(FMath::RandRange(0, River.RiverMesh.Num() - 1))]);
+                auto TempLocation = RiverHexArray[i]->MeshLocation->GetRelativeRotation();
+                TempLocation.Yaw += River.RotationCorrection;
+                RiverHexArray[i]->MeshLocation->SetWorldRotation(TempLocation);
+
+                int32 SnowAmount = 0;
+                int32 SandAmount = 0;
+                int32 MeadowAmount = 0;
+                UMaterialInstanceDynamic* TempMat = nullptr;
+                TempMat = UMaterialInstanceDynamic::Create(Cast<UMaterial>(RiverHexArray[i]->MeshLocation->GetMaterial(0)), this);
+                RiverHexArray[i]->MeshLocation->SetMaterial(0, TempMat);
+
+                auto SecodnRadius = GetSecondRadiusHex(RiverHexArray[i]);
+
+                for (auto MaterialCorrectionElement : SecodnRadius)
+                {
+                    EHexBiome TempBiome = MaterialCorrectionElement.HexRadius->GetHexBiome();
+                    if (TempBiome == EHexBiome::Snow || TempBiome == EHexBiome::SnowHill || TempBiome == EHexBiome::SnowHillWood ||
+                        TempBiome == EHexBiome::SnowWood)
+                    {
+                        SnowAmount++;
+                        continue;
+                    }
+                    else if (TempBiome == EHexBiome::Desert || TempBiome == EHexBiome::DesertHill ||
+                             TempBiome == EHexBiome::DesertHillWood || TempBiome == EHexBiome::DesertWood)
+                    {
+                        SandAmount++;
+                        continue;
+                    }
+                    else if (TempBiome == EHexBiome::Meadow || TempBiome == EHexBiome::MeadowHill ||
+                             TempBiome == EHexBiome::MeadowHillWood || TempBiome == EHexBiome::MeadowWood)
+                    {
+                        MeadowAmount++;
+                        continue;
+                    }
+                }
+                if (SnowAmount >= MeadowAmount && SnowAmount >= SandAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 1.0f);
+                }
+                else if (SandAmount >= SnowAmount && SandAmount >= MeadowAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 0.5f);
+                }
+                else if (MeadowAmount >= SnowAmount && MeadowAmount >= SandAmount)
+                {
+                    TempMat->SetScalarParameterValue("TypeMat", 0.0f);
+                }
+                break;
+            }
         }
     }
 }
@@ -1020,6 +1064,8 @@ TArray<FRadiusReturnHexStruct> ACCBaseHexagonActor::GetThirdRadiusHex(ACCItemHex
 
 bool ACCBaseHexagonActor::IsEqual(TArray<int32> Array1, TArray<int32> Array2)
 {
+    Array1.Sort();
+    Array2.Sort();
     if (Array1.Num() == Array2.Num())
     {
         for (int32 i = 0; i < Array1.Num(); i++)
