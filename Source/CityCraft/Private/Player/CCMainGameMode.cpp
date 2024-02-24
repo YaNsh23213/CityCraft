@@ -24,11 +24,11 @@ void ACCMainGameMode::AfterGeneration(ACCBaseHexagonActor* GenetationActor)
         for (int32 i = 0; i < ArrayHex.Num() - 1; i++)
         {
             int32 Result = FMath::RandRange(0, ArrayHex.Num() - 1);
-            if (ArrayHex[Result]->GetHexBiome() != EHexBiome::Lake)
+            if (ArrayHex[Result]->GetHexBiome() != EHexBiome::Lake && ArrayHex[Result]->GetHexBiome() !=EHexBiome::River)
             {
                 SpawnIndex = ArrayHex[Result]->GetPosition();
                 SpawnPosition = ArrayHex[Result]->GetActorLocation();
-                GenetationActor->SpawnAndReplace(GenetationActor->GetTownClass(), Result);
+                GenetationActor->SpawnAndReplace(GenetationActor->GetTownClass(), Result, ArrayHex[Result]->GetHexBiome());
                 break;
             }
         }

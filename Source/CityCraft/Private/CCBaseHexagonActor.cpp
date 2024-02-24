@@ -53,6 +53,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         for (int32 n = 0; n < MaxX; n++)
         {
             const auto TempHex = GetWorld()->SpawnActor<ACCItemHexagonActor>(HexClass, StartLocaion, StartRotation);
+            TempHex->SetOwner(this);
             StartLocaion.Y += FMath::Sqrt(3) / 2 * HexDiameter;
             TempHex->UpdatePosition(IndexX, IndexY);
             HexArray.Add(TempHex);
@@ -83,6 +84,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
             if (n != 0)
             {
                 const auto TempHex = GetWorld()->SpawnActor<ACCItemHexagonActor>(HexClass, StartLocaion, StartRotation);
+                TempHex->SetOwner(this);
                 TempHex->UpdatePosition(IndexX, IndexY);
                 HexArray.Add(TempHex);
             }
@@ -114,6 +116,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
                 if (n != 0)
                 {
                     const auto TempHex = GetWorld()->SpawnActor<ACCItemHexagonActor>(HexClass, StartLocaion, StartRotation);
+                    TempHex->SetOwner(this);
                     TempHex->UpdatePosition(IndexX, IndexY);
                     HexArray.Add(TempHex);
                 }
@@ -149,6 +152,7 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
             if (i != 0)
             {
                 const auto TempHex = GetWorld()->SpawnActor<ACCItemHexagonActor>(HexClass, StartLocaion, StartRotation);
+                TempHex->SetOwner(this);
                 TempHex->UpdatePosition(IndexX, IndexY);
                 HexArray.Add(TempHex);
                 StartLocaion.Y -= FMath::Sqrt(3) / 2 * HexDiameter;
@@ -892,7 +896,7 @@ void ACCBaseHexagonActor::ModuleRiver(TArray<ACCItemHexagonActor*> RiverHexArray
     }
 }
 
-void ACCBaseHexagonActor::SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex)
+void ACCBaseHexagonActor::SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex,EHexBiome OldBiome)
 {
     if (HexArray.IsValidIndex(IndexArrayHex))
     {
@@ -901,7 +905,10 @@ void ACCBaseHexagonActor::SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> Repla
         if (ReplaceHexClass)
         {
             ACCItemHexagonActor* NewActor = GetWorld()->SpawnActor<ACCItemHexagonActor>(ReplaceHexClass, OldTransform);
+            NewActor->SetOwner(this);
             NewActor->UpdatePosition(OldVector.X, OldVector.Y);
+            NewActor->SetHexBiome(OldBiome);
+            NewActor->InitHex();
 
             ACCItemHexagonActor* OldActor = HexArray[IndexArrayHex];
             OldActor->Destroy();

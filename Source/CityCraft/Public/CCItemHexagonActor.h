@@ -10,6 +10,7 @@
 class UStaticMeshComponent;
 class UBoxComponent;
 class USceneComponent;
+class ACCBasePlayerPawn;
 
 UCLASS()
 class CITYCRAFT_API ACCItemHexagonActor : public AActor
@@ -52,7 +53,8 @@ public:
     FText GetFreeStatusBiome() const { return FText::FromString(NameOwnFruction); };
 
     // Interaction
-    virtual void InteractionItem();
+    virtual void InteractionItem(ACCBasePlayerPawn* ActorOwner);
+    virtual void InitHex();
 
     void SetIsSelect(bool Value);
 

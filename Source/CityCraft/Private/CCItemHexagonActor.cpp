@@ -3,6 +3,7 @@
 #include "CCItemHexagonActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Player/CCBasePlayerPawn.h"
 
 ACCItemHexagonActor::ACCItemHexagonActor()
 {
@@ -46,10 +47,13 @@ FText ACCItemHexagonActor::GetNameBiome()
     return FText ::FromString("");
 }
 
-void ACCItemHexagonActor::InteractionItem()
+void ACCItemHexagonActor::InteractionItem(ACCBasePlayerPawn* ActorOwner)
 {
     UE_LOG(LogTemp, Warning, TEXT("Item interaction"))
+    //Owner->UpdateWidgetInfoFromHexInfo()
 }
+
+void ACCItemHexagonActor::InitHex() {}
 
 void ACCItemHexagonActor::BeginPlay()
 {

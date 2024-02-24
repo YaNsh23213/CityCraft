@@ -25,6 +25,8 @@ public:
 
     void SetSensitive(float Value) { Sensitive = Value; }
 
+    void UpdateWidwowsInfo(FStorageStruct DataS, FProductivityStruct DataP, FText NameHex, FText IsFree, UTexture2D* NewImage);
+
 protected:
     virtual void BeginPlay() override;
 

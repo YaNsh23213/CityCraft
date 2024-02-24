@@ -89,7 +89,7 @@ void ACCBasePlayerPawn::LeftMouseClick()
             CurrentSelected = Cast<ACCItemHexagonActor>(HitResult.GetActor());
             if (CurrentSelected)
             {
-                CurrentSelected->InteractionItem();
+                CurrentSelected->InteractionItem(this);
                 CurrentSelected->SetIsSelect(true);
                 UE_LOG(LogTemp, Warning, TEXT("Actor: %s"), *GetEnumAsString(CurrentSelected->GetHexBiome()).ToString());
                 UpdateWidgetInfoFromHexInfo(CurrentSelected->GetHextorage(), CurrentSelected->GetHexProductivity(),

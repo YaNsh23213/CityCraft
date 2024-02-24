@@ -27,9 +27,12 @@ public:
 
     TArray<ACCItemHexagonActor*> GetHexArray() const { return HexArray; }
 
-    void SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex);
+    void SpawnAndReplace(TSubclassOf<ACCItemHexagonActor> ReplaceHexClass, int32 IndexArrayHex, EHexBiome OldBiome);
 
     TSubclassOf<ACCItemHexagonActor> GetTownClass() const { return TownHexClass; }
+
+    UFUNCTION(BlueprintCallable)
+    FMeshData GetMeshData() const { return DataMesh; }
 
 protected:
     // Base hexagon item
@@ -121,9 +124,6 @@ protected:
 
     virtual void BeginPlay() override;
 
-    UFUNCTION(BlueprintCallable)
-    FMeshData GetMeshData() const { return DataMesh; }
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FMeshData DataMesh;
 
@@ -133,11 +133,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FRiverModuleCorrectionStruct> MainRiverModuleCorrection;
 
-     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FRiverModuleCorrectionStruct> StartRiverModuleCorrection;
 
 private:
-
     UPROPERTY()
     TArray<ACCItemHexagonActor*> HexArray;
 

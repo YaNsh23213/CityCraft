@@ -149,7 +149,49 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 GoldProductivity;
 };
+USTRUCT(BlueprintType)
+struct FBuildMeshData
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> SDesertBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> MDesertBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> BDesertBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> SSnowBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> MSnowBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> BSnowBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> SMeadowBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> MMeadowBuildArray;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<TSoftObjectPtr<UStaticMesh>> BMeadowBuildArray;
+};
 UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {
     GENERATED_BODY()
+
+public:
+    FBuildMeshData GetBuildMeshData() const { return BuildMeshData; }
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FBuildMeshData BuildMeshData;
+
+private:
 };
