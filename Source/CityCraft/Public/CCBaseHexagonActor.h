@@ -10,6 +10,7 @@
 class ACCItemHexagonActor;
 class ACCTownHexagonActor;
 
+
 UCLASS()
 class CITYCRAFT_API ACCBaseHexagonActor : public AActor
 {
@@ -35,6 +36,10 @@ public:
     FMeshData GetMeshData() const { return DataMesh; }
 
 protected:
+
+    UPROPERTY()
+    FGenerationConfigStruct CurrentInfo;
+
     // Base hexagon item
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Config")
     TSubclassOf<ACCItemHexagonActor> HexClass;
@@ -53,74 +58,7 @@ protected:
 
     // Generator Config
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float PercentSnow = 0.33;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float PercentSnowOverlap = 0.1;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float PercentDesert = 0.33;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
-    float PercentDesertOverlap = 0.1;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 1))
-    int32 MinOverlapAmount = 1;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 150))
-    int32 MaxOverlapAmount = 200;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float SnowHilFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float MeadowHilFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float DesertHilFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float MeadowWoodFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float SnowWoodFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float DesertWoodFrequency = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
-    int32 AmountLake = 2;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float StartedChanceUpLake = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    float StepChanceDownLake = 0.5;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
-    bool NeedGenerateModuleLake = true;
-
-    // Watter settings
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0))
-    bool HaveOcean = true;
-
-    UPROPERTY(
-        EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, EditCondition = "HaveOcean == true"))
-    bool ContinentTwo = false;
-
-    // RiverSettings
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
-    int32 AmountRiver = 2;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
-    int32 MinLengthRiver = 2;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
-    int32 MaxLengthRiver = 2;
-
-    //
+   
 
     virtual void BeginPlay() override;
 

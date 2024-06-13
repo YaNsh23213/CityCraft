@@ -182,6 +182,83 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<TSoftObjectPtr<UStaticMesh>> BMeadowBuildArray;
 };
+
+USTRUCT(BlueprintType)
+struct FGenerationConfigStruct
+{
+    GENERATED_USTRUCT_BODY()
+
+public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float PercentSnow = 0.33;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float PercentSnowOverlap = 0.1;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float PercentDesert = 0.33;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig")
+    float PercentDesertOverlap = 0.1;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 1))
+    int32 MinOverlapAmount = 1;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 150))
+    int32 MaxOverlapAmount = 200;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float SnowHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float MeadowHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float DesertHilFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float MeadowWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float SnowWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float DesertWoodFrequency = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 AmountLake = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float StartedChanceUpLake = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    float StepChanceDownLake = 0.5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0.0f, ClampMax = 1.0f))
+    bool NeedGenerateModuleLake = true;
+
+    // Watter settings
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0))
+    bool HaveOcean = true;
+
+    UPROPERTY(
+        EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, EditCondition = "HaveOcean == true"))
+    bool ContinentTwo = false;
+
+    // RiverSettings
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 AmountRiver = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 MinLengthRiver = 2;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeneratorConfig", meta = (ClampMin = 0, ClampMax = 100))
+    int32 MaxLengthRiver = 2;
+
+    //
+};
+
 UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 {
     GENERATED_BODY()
@@ -189,9 +266,17 @@ UCLASS() class CITYCRAFT_API UCCGameInstance : public UGameInstance
 public:
     FBuildMeshData GetBuildMeshData() const { return BuildMeshData; }
 
+    UFUNCTION(BlueprintCallable)
+    void SetGenerationConfig(FGenerationConfigStruct Data) { GenerationMapConfig = Data; }
+
+    FGenerationConfigStruct GetFGenerationConfigStruct(){ return GenerationMapConfig; }
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FBuildMeshData BuildMeshData;
+
+    UPROPERTY()
+    FGenerationConfigStruct GenerationMapConfig;
 
 private:
 };

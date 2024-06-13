@@ -161,6 +161,8 @@ void ACCBaseHexagonActor::InitMap(int32 HexDiameter, int32 MaxY, int32 MaxX)
         }
         IndexY--;
     }
+    UCCGameInstance* GameInst = Cast<UCCGameInstance>(GetGameInstance());
+    CurrentInfo = GameInst->GetFGenerationConfigStruct();
     StartGenerate();
 }
 
@@ -171,8 +173,8 @@ void ACCBaseHexagonActor::StartGenerate()
     int32 MaxBoundY = FindMinMax(false, true);
     int32 MinBoundY = FindMinMax(false, false);
 
-    int32 SnowBorder = FMath::RoundToInt(MaxBoundY - float(MaxBoundY) * PercentSnow);
-    int32 DesertBorder = FMath::RoundToInt(float(MaxBoundY) * PercentDesert);
+    int32 SnowBorder = FMath::RoundToInt(MaxBoundY - float(MaxBoundY) * CurrentInfo.PercentSnow);
+    int32 DesertBorder = FMath::RoundToInt(float(MaxBoundY) * CurrentInfo.PercentDesert);
     UE_LOG(LogTemp, Display, TEXT("SnowBorder %i"), SnowBorder);
     UE_LOG(LogTemp, Display, TEXT("DesertBorder %i"), DesertBorder);
 
@@ -180,7 +182,7 @@ void ACCBaseHexagonActor::StartGenerate()
     for (auto Element : HexArray)
     {
         // Generate SnowLocation
-        if (PercentSnow > 0)
+        if (CurrentInfo.PercentSnow > 0)
         {
             if (Element->GetPosition().Y >= SnowBorder)
             {
@@ -197,7 +199,7 @@ void ACCBaseHexagonActor::StartGenerate()
             }
         }
         // Generate DesertLocation
-        if (PercentDesert > 0)
+        if (CurrentInfo.PercentDesert > 0)
         {
             if (Element->GetPosition().Y <= DesertBorder && Element->GetPosition().Y >= -DesertBorder)
             {
@@ -213,10 +215,11 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // ItinOverlap
     // MainOveralpSnow
-    if (PercentSnow > 0 && PercentSnowOverlap > 0)
+    if (CurrentInfo.PercentSnow > 0 && CurrentInfo.PercentSnowOverlap > 0)
     {
         int32 PersentOverlapSnowBiome =
-            FMath::Clamp(FMath::RoundToInt(float(MaxBoundY) * PercentSnow * PercentSnowOverlap), MinOverlapAmount, MaxOverlapAmount);
+            FMath::Clamp(FMath::RoundToInt(float(MaxBoundY) * CurrentInfo.PercentSnow * CurrentInfo.PercentSnowOverlap),
+                CurrentInfo.MinOverlapAmount, CurrentInfo.MaxOverlapAmount);
 
         UE_LOG(LogTemp, Display, TEXT("PersentOverlapSnowBiome %i"), PersentOverlapSnowBiome);
         for (auto Element : HexArray)
@@ -288,10 +291,11 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // ItinOverlap
     // MainOveralpDesert
-    if (PercentDesert > 0 && PercentDesertOverlap > 0)
+    if (CurrentInfo.PercentDesert > 0 && CurrentInfo.PercentDesertOverlap > 0)
     {
         int32 PersentOverlapDesertBiome =
-            FMath::Clamp(FMath::RoundToInt(float(MaxBoundY) * PercentDesert * PercentDesertOverlap), MinOverlapAmount, MaxOverlapAmount);
+            FMath::Clamp(FMath::RoundToInt(float(MaxBoundY) * CurrentInfo.PercentDesert * CurrentInfo.PercentDesertOverlap),
+                CurrentInfo.MinOverlapAmount, CurrentInfo.MaxOverlapAmount);
 
         UE_LOG(LogTemp, Display, TEXT("PersentOverlapSnowBiome %i"), PersentOverlapDesertBiome);
         for (auto Element : HexArray)
@@ -342,7 +346,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
 
     // Watter
-    if (HaveOcean)
+    if (CurrentInfo.HaveOcean)
     {
         int32 StartPoint = 0;
         int32 OffsetStartPoint = 0;
@@ -409,7 +413,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     int32 i = 0;
     // DesertHill
-    float DesrtHillFr = DesertArr.Num() * DesertHilFrequency;
+    float DesrtHillFr = DesertArr.Num() * CurrentInfo.DesertHilFrequency;
     while (i < DesrtHillFr)
     {
         int32 TempIndex = FMath::RandRange(0, DesertArr.Num() - 1);
@@ -424,7 +428,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // SnowHill
     i = 0;
-    float SnowArrHillFr = SnowArr.Num() * SnowHilFrequency;
+    float SnowArrHillFr = SnowArr.Num() * CurrentInfo.SnowHilFrequency;
     while (i < SnowArrHillFr)
     {
         int32 TempIndex = FMath::RandRange(0, SnowArr.Num());
@@ -439,7 +443,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // MeadowHill
     i = 0;
-    float MeadowArrlFr = MeadowArr.Num() * MeadowHilFrequency;
+    float MeadowArrlFr = MeadowArr.Num() * CurrentInfo.MeadowHilFrequency;
     while (i < MeadowArrlFr)
     {
         int32 TempIndex = FMath::RandRange(0, MeadowArr.Num() - 1);
@@ -470,7 +474,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // DesertWood
     i = 0;
-    float WoodDesrtHillFr = WoodDesertArr.Num() * DesertWoodFrequency;
+    float WoodDesrtHillFr = WoodDesertArr.Num() * CurrentInfo.DesertWoodFrequency;
     while (i < WoodDesrtHillFr)
     {
         int32 TempIndex = FMath::RandRange(0, WoodDesertArr.Num() - 1);
@@ -494,7 +498,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // SnowWood
     i = 0;
-    float WoodSnowArrHillFr = WoodSnowArr.Num() * SnowWoodFrequency;
+    float WoodSnowArrHillFr = WoodSnowArr.Num() * CurrentInfo.SnowWoodFrequency;
     while (i < WoodSnowArrHillFr)
     {
         int32 TempIndex = FMath::RandRange(0, WoodSnowArr.Num() - 1);
@@ -518,7 +522,7 @@ void ACCBaseHexagonActor::StartGenerate()
     }
     // MeadowHill
     i = 0;
-    float WoodMeadowArrlFr = WoodMeadowArr.Num() * MeadowWoodFrequency;
+    float WoodMeadowArrlFr = WoodMeadowArr.Num() * CurrentInfo.MeadowWoodFrequency;
     while (i < WoodMeadowArrlFr)
     {
         int32 TempIndex = FMath::RandRange(0, WoodMeadowArr.Num() - 1);
@@ -541,11 +545,11 @@ void ACCBaseHexagonActor::StartGenerate()
         i++;
     }
     // LakeGenerate
-    if (AmountLake > 0)
+    if (CurrentInfo.AmountLake > 0)
     {
         TArray<int32> LakeIndex;
         bool ValidIndex = false;
-        for (int32 n = 0; n < AmountLake; n++)
+        for (int32 n = 0; n < CurrentInfo.AmountLake; n++)
         {
             while (!ValidIndex)
             {
@@ -573,7 +577,7 @@ void ACCBaseHexagonActor::StartGenerate()
 
             for (auto RadiusElement : FirstRadiusArray)
             {
-                if (FMath::FRandRange(0.0f, 1.0f) < StartedChanceUpLake)
+                if (FMath::FRandRange(0.0f, 1.0f) < CurrentInfo.StartedChanceUpLake)
                 {
                     RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                         DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
@@ -588,7 +592,8 @@ void ACCBaseHexagonActor::StartGenerate()
                 {
                     if (TempRadiusElement.HexRadius->GetHexBiome() == EHexBiome::Lake)
                     {
-                        if (FMath::FRandRange(0.0f, 1.0f) < FMath::Clamp(StartedChanceUpLake - StepChanceDownLake, 0.0f, 10.0f))
+                        if (FMath::FRandRange(0.0f, 1.0f) <
+                            FMath::Clamp(CurrentInfo.StartedChanceUpLake - CurrentInfo.StepChanceDownLake, 0.0f, 10.0f))
                         {
                             RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                                 DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
@@ -606,7 +611,8 @@ void ACCBaseHexagonActor::StartGenerate()
                     if (TempRadiusElement.HexRadius->GetHexBiome() == EHexBiome::Lake)
                     {
                         if (FMath::FRandRange(0.0f, 1.0f) <
-                            FMath::Clamp(StartedChanceUpLake - StepChanceDownLake - StepChanceDownLake, 0.0f, 10.0f))
+                            FMath::Clamp(CurrentInfo.StartedChanceUpLake - CurrentInfo.StepChanceDownLake - CurrentInfo.StepChanceDownLake,
+                                0.0f, 10.0f))
                         {
                             RadiusElement.HexRadius->MeshLocation->SetStaticMesh(
                                 DataMesh.LakeMeshArray[int(FMath::RandRange(0, DataMesh.LakeMeshArray.Num() - 1))]);
@@ -619,7 +625,7 @@ void ACCBaseHexagonActor::StartGenerate()
         }
     }
     // ModulLake
-    if (NeedGenerateModuleLake)
+    if (CurrentInfo.NeedGenerateModuleLake)
     {
         TArray<ACCItemHexagonActor*> ArrayHexLake;
         for (auto Lake : HexArray)
@@ -702,7 +708,7 @@ void ACCBaseHexagonActor::StartGenerate()
 
     TArray<int32> RiverIndex;
     bool ValidRiverIndex = false;
-    for (int32 m = 0; m < AmountRiver; m++)
+    for (int32 m = 0; m < CurrentInfo.AmountRiver; m++)
     {
         while (!ValidRiverIndex)
         {
@@ -775,7 +781,7 @@ void ACCBaseHexagonActor::MakeRiver(ACCItemHexagonActor* HexCurrent)
     ACCItemHexagonActor* CurrentItem = HexCurrent;
     ACCItemHexagonActor* OldItem = HexCurrent;
     int32 CounterRiver = 0;
-    int32 MaxCounter = FMath::RandRange(MinLengthRiver, MaxLengthRiver);
+    int32 MaxCounter = FMath::RandRange(CurrentInfo.MinLengthRiver, CurrentInfo.MaxLengthRiver);
 
     for (CounterRiver; CounterRiver < MaxCounter; CounterRiver++)
     {
